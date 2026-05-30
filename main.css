@@ -317,18 +317,17 @@ h2 {
 }
 
 .resumecontainer{
-    display:flexbox;
-    justify-content: center;
-    align-items: center;
+    display:grid;
+    height:300px;
+    place-items:center;
     background-color:#EDEDE9;
 }
 
 .resume {
-    position:fixed;
-    width:75%;
-    height:75%;
-    object-fit: cover;
-
+    width:500px;
+    position: relative;
+    margin-top: 11vh;
+    border:3px solid #214248;
 }
 
 
@@ -926,6 +925,7 @@ li {
 
 #pad {
     margin-top:10px;
+    margin-left:5px;
 }
 .works {
     a { color:#DEDBD2!important; }
