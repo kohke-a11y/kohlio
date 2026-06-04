@@ -306,10 +306,10 @@ h2 {
 .bio {
     position:fixed;
     color:#214248;
-    top:100px;
+    top:110px;
     padding:18px 15px;
     width:300px;
-    height:400px;
+    height:380px;
     text-align:center;
     background-color:#DEDBD2;
     border-top: 3px solid #214248;
@@ -865,7 +865,7 @@ h2 {
 
 .workscontainer {
     z-index:4;
-    position:absolute;
+    position:fixed;
     top:500px;
     color: #ffffff;
     display:flex;
@@ -888,7 +888,6 @@ h2 {
 }
 .left {
     width:35%;
-
 }
 .right {
     width:15%;

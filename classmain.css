@@ -3,7 +3,11 @@
 }
 
 body{
-    background-color: #EDEDE9;
+    background-image:url(https://i.postimg.cc/V5czrShG/windmillblur.png);
+    background-repeat:no-repeat;
+    background-size: cover;
+    width:100vw;
+    height:100vh;
     font-family: monospace; 
     margin:0;
 }
@@ -50,28 +54,27 @@ a:active {
 
 .classbox {
   display: flex;
-  position:fixed;
   justify-content: center;
-  column-gap:15px;
-  row-gap:0px;  
+  column-gap:10px;
+  row-gap:5px;  
   min-height:100vh;   
   margin: 0px;     
-  margin-top: -255px;
-  padding:270px;
+  margin-top: -285px;
+  padding:300px;
   width:100vw;
   height:100vh;
 }
 
 .classblurb {
     display:flex;
-    margin-top:50px;
-    justify-content: center;
+    justify-content: center; 
     text-align: center;
+    margin-top:-20px;
 }
 
 .classblurbtwo {
     display:flex;
-    margin-top:120px;
+    margin-top:150px;
     justify-content: center;
     text-align: center;
 }
@@ -104,14 +107,14 @@ h1 {
 
 .projcontainer {
     display:grid;
-    grid-template-columns: repeat(4, 1fr); 
+    grid-template-columns: repeat(5, 1fr); 
     place-content: center;
     align-items: center;
-justify-items: center;
-    gap:5px;
-    padding:45px;
-    background-color:#EDEDE9;
-    margin-top:-15px;
+    justify-items: center;
+    gap:25px;
+    padding:120px;
+    color:#EDEDE9;
+    margin-top:-105px;
 }
 
 
@@ -132,4 +135,81 @@ justify-items: center;
     background-image:url(https://i.postimg.cc/rRkx4M7v/windmill.jpg);
     cursor:pointer;
 }
+
+
+
+.illbox{
+    width:150px;
+    height:150px;
+    margin:10px;
+    background-image:url(https://i.postimg.cc/xqYG88T1/ill.webp);
+    background-repeat:no-repeat;
+    background-size: cover;
+    display:inline-block;
+    padding:5px;
+    color:#DEDBD2
+}
+
+
+.illbox:hover {
+    background-image:url(https://i.postimg.cc/rRkx4M7v/windmill.jpg);
+    cursor:pointer;
+}
+
+.posterbox{
+    width:150px;
+    height:150px;
+    margin:10px;
+    background-image:url(projects/posteres.webp);
+    background-repeat:no-repeat;
+    background-size: cover;
+    display:inline-block;
+    padding:5px;
+    color:#DEDBD2
+}
+
+
+.posterbox:hover {
+    background-image:url(https://i.postimg.cc/rRkx4M7v/windmill.jpg);
+    cursor:pointer;
+}
+
+
+.scptbox{
+    width:100px;
+    height:150px;
+    margin:10px;
+    background-image:url(https://i.postimg.cc/yWRm1t9Y/scpt.webp);
+    background-repeat:no-repeat;
+    background-size: cover;
+    display:inline-block;
+    padding:5px;
+    color:#DEDBD2
+}
+
+
+.scptbox:hover {
+    background-image:url(https://i.postimg.cc/rRkx4M7v/windmill.jpg);
+    cursor:pointer;
+}
+
+
+.brandbox{
+    width:150px;
+    height:150px;
+    margin:10px;
+    background-image:url(https://i.postimg.cc/9FfRCs2X/branding.webp);
+    background-repeat:no-repeat;
+    background-size: cover;
+    display:inline-block;
+    padding:5px;
+    color:#DEDBD2
+}
+
+
+.brandbox:hover {
+    background-image:url(https://i.postimg.cc/rRkx4M7v/windmill.jpg);
+    cursor:pointer;
+}
+
 
