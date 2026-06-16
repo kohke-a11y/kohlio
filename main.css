@@ -208,10 +208,10 @@ h2 {
 .popup{
     display: none;
     position:relative;
-    margin-top:15%;  
-    margin-left:20%;
-    width:20%;
-    height:20%;
+    margin-top:5%;  
+    margin-left:5%;
+    width:30%;
+    height:30%;
     padding:2px;
     z-index:10;
 }
@@ -338,10 +338,10 @@ p {
 .popup-image {
     display: none;
     position:relative;
-    margin-top:-60%;  
-    margin-left:35%;
-    width:55%;
-    height:55%;
+    margin-top:-40%;  
+    margin-left:30%;
+    width:35%;
+    height:30%;
     padding:2px;
     z-index:50;
 }
