@@ -1,45 +1,429 @@
 <!doctype html>
-<html>
-    <head>
-        <title>projects</title>
-        <link rel="stylesheet" href="main.css">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Index</title>
+    <style>
+      :root {
+        --bg: #eaeaeb;
+        --fg: #214248;
+        --muted: #908c8c;
+        --line: #c7c4c4;
+        --hover: #f3f3f3;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html,
+      body {
+        background: var(--bg);
+        color: var(--fg);
+      }
+      body {
+        font-family: "SF Mono", ui-monospace, "Menlo", "Consolas", monospace;
+        font-size: 13px;
+        line-height: 1.5;
+        padding: 24px;
+        -webkit-font-smoothing: antialiased;
+      }
 
-    </head>
+      #topbar {
+        position: sticky;
+        top: 0;
+        background: var(--bg);
+        z-index: 20;
+      }
+      .nav {
+        display: flex;
+        gap: 18px;
+        padding: 0 8px 12px;
+        align-items: baseline;
+      }
+      .nav button,
+      .nav a {
+        font: inherit;
+        color: var(--muted);
+        background: none;
+        border: none;
+        padding: 0;
+        cursor: pointer;
+        text-decoration: none;
+        letter-spacing: 0.02em;
+      }
+      .nav button:hover,
+      .nav a:hover {
+        color: var(--fg);
+      }
+      .nav button.active {
+        color: var(--fg);
+        border-bottom: 1.5px solid var(--fg);
+      }
 
-    <body>
-        
-        <div class="matchestwo">
-            <div class="boxtwo">
-            <a href="index.html">portfolio</a>   
-            </div>
-            <div class="boxtwo">
-            <a href="guestbook.html">contact</a>   
-            </div>
-        </div>
+      #gallery {
+        display: none;
+        flex-wrap: wrap;
+        gap: 6px;
+        padding: 4px 8px;
+      }
+      #gallery img {
+        height: 76px;
+        width: auto;
+        object-fit: cover;
+        background: var(--hover);
+        display: block;
+        cursor: crosshair;
+      }
 
+      body.view-gallery #colhead,
+      body.view-gallery #list {
+        display: none;
+      }
+      body.view-gallery #gallery {
+        display: flex;
+      }
 
-        <div class="projectcontainer">
+      .head,
+      .row {
+        display: grid;
+        grid-template-columns: 1.2fr 1.2fr 0.5fr;
+        gap: 16px;
+        align-items: baseline;
+      }
 
-            <div class="projblurb">
-                <h2>under construction!</h2>
-             </div>
+      .head {
+        color: var(--fg);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        font-size: 13px;
+        padding: 8px;
+        border-bottom: 1.5px solid var(--fg);
+        background: var(--bg);
+      }
 
+      .row {
+        padding: 8px;
+        cursor: pointer;
+        border-bottom: 1.5px solid var(--line);
+        transition: background 0.12s ease;
+      }
+      .row:hover,
+      .row.open {
+        background: var(--hover);
+      }
+      .year {
+        color: var(--muted);
+        text-align: right;
+      }
 
-        <!-- 
-         <div class="videocs">
-        <video width="100%" height="100%" muted autoplay loop playsinline poster>
-        <source src="assets/projects/Lily.MOV" type="video/mp4">
-        Your browser does not support the video tag.
-        </video>
-        </div>  -->
+      .detail {
+        display: none;
+        grid-template-columns: 1.2fr 1.2fr 0.5fr;
+        gap: 16px;
+        padding: 4px 8px 22px;
+        border-bottom: 1.5px solid var(--line);
+      }
+      .detail.open {
+        display: grid;
+      }
+      .detail .desc {
+        grid-column: 1;
+        align-self: start;
+        white-space: pre-wrap;
+      }
+      .detail .imgs {
+        grid-column: 2 / -1;
+        display: flex;
+        flex-wrap: nowrap;
+        gap: 10px;
+        overflow-x: auto;
+        overflow-y: hidden;
+        padding-bottom: 8px;
+        -webkit-overflow-scrolling: touch;
+      }
+      .detail img {
+        height: 220px;
+        width: auto;
+        flex: 0 0 auto;
+        object-fit: cover;
+        background: var(--hover);
+        display: block;
+      }
+      .empty {
+        color: var(--muted);
+      }
 
+      .decor {
+        text-align:center;
+        font-weight: 600px;
+        padding: 2px;
+        border-bottom: 1.5px solid var(--fg);
+      }
 
+      #thumb {
+        position: fixed;
+        right: 18px;
+        bottom: 18px;
+        max-width: 38vw;
+        max-height: 42vh;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.12s ease;
+        z-index: 50;
+      }
+      #thumb.show {
+        opacity: 1;
+      }
 
+      #status {
+        padding: 8px;
+        color: var(--muted);
+      }
 
+      @media (max-width: 640px) {
+        .head,
+        .row {
+          grid-template-columns: 1.6fr 1fr 0.5fr;
+          gap: 8px;
+        }
+        .detail.open {
+          grid-template-columns: 1fr;
+        }
+        .detail .desc {
+          grid-column: 1;
+        }
+        .detail .imgs {
+          grid-column: 1;
+        }
+        .detail img {
+          height: 140px;
+        }
+        #thumb {
+          max-width: 55vw;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          transition: none !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="topbar">
+      <nav class="nav">
+        <button id="btn-index" type="button" class="active">Index</button>
+        <button id="btn-gallery" type="button">Images</button>
+        <a href="contact.html">Contact</a>
+        <a href="index.html">Homepage</a>
 
+      </nav>
+      <div class="head" id="colhead">
+        <span>Project</span>
+        <span>Practice</span>
+        <span>Year</span>
+      </div>
+    </div>
 
-    </body>
+    <div id="list"></div>
+    <div id="gallery"></div>
+    <div id="status">Loading…</div>
 
+    <img id="thumb" alt="" />
 
-    </html>
+    <br>
+    <div class="decor">
+    <p>Keep in touch | 703-403-2901 | Kohkristen13@gmail.com</p>
+    </div>
+
+    <script>
+      /* =========================================================
+     CONFIG — edit these three values, then save and host.
+     ========================================================= */
+      const SPREADSHEET_ID = "1TSh7B4pXEDU4iREQtD7O_qL75x5yo4EiYLNhNjXDNkk";
+      const API_KEY = "AIzaSyBwmI2WqU5wyDpvdnWYRf0LbxA9JBScpa4";
+      const SHEET_NAME = "Sheet1"; // the tab name at the bottom of your sheet
+      /* ========================================================= */
+
+      // Columns B..P starting at row 3:
+      // B Project | C Practice | D Year | E Thumbnail | F..O image01..image10 | P Description
+      const RANGE = SHEET_NAME + "!B3:P";
+
+      const listEl = document.getElementById("list");
+      const galleryEl = document.getElementById("gallery");
+      const statusEl = document.getElementById("status");
+      const thumb = document.getElementById("thumb");
+
+      let allImages = [];
+
+      function isImg(v) {
+        return typeof v === "string" && /^https?:\/\//i.test(v.trim());
+      }
+
+      async function load() {
+        const url =
+          "https://sheets.googleapis.com/v4/spreadsheets/" +
+          SPREADSHEET_ID +
+          "/values/" +
+          encodeURIComponent(RANGE) +
+          "?key=" +
+          API_KEY;
+
+        try {
+          const res = await fetch(url);
+          if (!res.ok) {
+            throw new Error(res.status + " — " + (await res.text()));
+          }
+          const data = await res.json();
+          render(data.values || []);
+        } catch (err) {
+          statusEl.textContent = "Could not load the sheet. " + err.message;
+        }
+      }
+
+      function render(rows) {
+        statusEl.style.display = "none";
+        listEl.innerHTML = "";
+        allImages = [];
+        let count = 0;
+
+        rows.forEach(function (r) {
+          const project = (r[0] || "").trim();
+          const practice = (r[1] || "").trim();
+          const year = (r[2] || "").trim();
+          const thumbUrl = (r[3] || "").trim();
+          const images = r
+            .slice(4, 14)
+            .map(function (x) {
+              return (x || "").trim();
+            })
+            .filter(isImg);
+          const description = (r[14] || "").trim();
+
+          if (!project && !practice && !year) return;
+          count++;
+
+          images.forEach(function (src) {
+            allImages.push({ src: src, alt: project });
+          });
+
+          const row = document.createElement("div");
+          row.className = "row";
+          const cR = document.createElement("span");
+          cR.className = "project";
+          cR.textContent = project;
+          const cP = document.createElement("span");
+          cP.className = "practice";
+          cP.textContent = practice;
+          const cY = document.createElement("span");
+          cY.className = "year";
+          cY.textContent = year;
+          row.append(cR, cP, cY);
+
+          const detail = document.createElement("div");
+          detail.className = "detail";
+
+          const descEl = document.createElement("div");
+          descEl.className = "desc";
+          descEl.textContent = description;
+          detail.appendChild(descEl);
+
+          const imgsWrap = document.createElement("div");
+          imgsWrap.className = "imgs";
+          detail.appendChild(imgsWrap);
+
+          let built = false;
+          function buildImages() {
+            if (built) return;
+            built = true;
+            if (images.length === 0) {
+              imgsWrap.innerHTML =
+                '<span class="empty">No images for this project.</span>';
+              return;
+            }
+            images.forEach(function (src) {
+              const im = document.createElement("img");
+              im.loading = "lazy";
+              im.src = src;
+              im.alt = project;
+              imgsWrap.appendChild(im);
+            });
+          }
+
+          if (isImg(thumbUrl)) {
+            row.addEventListener("mouseenter", function () {
+              thumb.src = thumbUrl;
+              thumb.classList.add("show");
+            });
+            row.addEventListener("mouseleave", function () {
+              thumb.classList.remove("show");
+            });
+          }
+
+          row.addEventListener("click", function () {
+            const open = detail.classList.toggle("open");
+            row.classList.toggle("open", open);
+            if (open) buildImages();
+          });
+
+          listEl.appendChild(row);
+          listEl.appendChild(detail);
+        });
+
+        if (count === 0) {
+          statusEl.style.display = "block";
+          statusEl.textContent =
+            "No rows found. Check SHEET_NAME and that your data starts at row 3.";
+        }
+      }
+
+      let galleryBuilt = false;
+      function buildGallery() {
+        if (galleryBuilt) return;
+        galleryBuilt = true;
+        if (allImages.length === 0) {
+          galleryEl.innerHTML = '<span class="empty">No images found.</span>';
+          return;
+        }
+        allImages.forEach(function (item) {
+          const im = document.createElement("img");
+          im.loading = "lazy";
+          im.src = item.src;
+          im.alt = item.alt;
+          im.addEventListener("mouseenter", function () {
+            thumb.src = item.src;
+            thumb.classList.add("show");
+          });
+          im.addEventListener("mouseleave", function () {
+            thumb.classList.remove("show");
+          });
+          galleryEl.appendChild(im);
+        });
+      }
+
+      const btnGallery = document.getElementById("btn-gallery");
+      const btnIndex = document.getElementById("btn-index");
+
+      function showGallery() {
+        buildGallery();
+        document.body.classList.add("view-gallery");
+        btnGallery.classList.add("active");
+        btnIndex.classList.remove("active");
+        thumb.classList.remove("show");
+        window.scrollTo(0, 0);
+      }
+      function showIndex() {
+        document.body.classList.remove("view-gallery");
+        btnIndex.classList.add("active");
+        btnGallery.classList.remove("active");
+        thumb.classList.remove("show");
+      }
+      btnGallery.addEventListener("click", showGallery);
+      btnIndex.addEventListener("click", showIndex);
+
+      load();
+    </script>
+  </body>
+</html>
