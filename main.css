@@ -182,7 +182,7 @@ h2 {
     position:fixed;
     color:#214248;
     top:85px;
-    padding:25px 15px;
+    padding:20px 15px;
     width:300px;
     height:400px;
     text-align:center;
@@ -225,7 +225,7 @@ h2 {
 .workscontainer {
     z-index:4;
     position:fixed;
-    top:480px;
+    top:475px;
     color: #ffffff;
     display:flex;
     flex-direction:horizontal;
