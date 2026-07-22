@@ -69,7 +69,7 @@ body{
     color:#d5bdaf;
 }
 .boxtwo {
-    background-color:#DEDBD2;
+    background-color:#f9fafb;
     border: solid 1px #214248; 
     display:inline-block;
     padding:2.5px;
@@ -186,7 +186,7 @@ h2 {
     width:300px;
     height:400px;
     text-align:center;
-    background-color:#DEDBD2;
+    background-color:#f9fafb;
     border-top: 3px solid #214248;
 
 }
@@ -240,7 +240,7 @@ h2 {
     margin-left:20px;
     margin-right:20px;
     margin-top:10px;
-    color:#DEDBD2;
+    color:#f9fafb;
 }
 
 .left {
@@ -286,7 +286,7 @@ li {
     margin-left:5px;
 }
 .works {
-    a { color:#DEDBD2!important; }
+    a { color:#f9fafb!important; }
     a:hover { color:#214248!important;}
     margin-left:-5px;
 }
@@ -298,7 +298,7 @@ h1 {
     padding-left:15px;
     font-size: 13px;
     font-weight:600;
-    color:#DEDBD2;
+    color:#f9fafb;
 
 }
 
