@@ -135,6 +135,13 @@
         align-self: start;
         white-space: pre-wrap;
       }
+      .detail .desc a {
+        color: var(--muted);
+        text-decoration: underline;
+      }
+      .detail .desc a:hover {
+        color: var(--fg);
+      }
       .detail .imgs {
         grid-column: 2 / -1;
         display: flex;
@@ -272,6 +279,33 @@
         );
       }
 
+      // Finds URLs (with or without a protocol/www) inside plain text and
+      // appends the text to el as a mix of text nodes and clickable <a> tags.
+      const URL_PATTERN =
+        /((?:https?:\/\/)?(?:www\.)?[-\w]+(?:\.[-\w]+)*\.(?:com|org|net|io|co|dev|app|design|studio|me|info|xyz|gallery|art|shop|blog|edu|gov)(?:\/[^\s]*)?)/gi;
+      function appendLinkedText(el, text) {
+        let lastIndex = 0;
+        let m;
+        URL_PATTERN.lastIndex = 0;
+        while ((m = URL_PATTERN.exec(text)) !== null) {
+          if (m.index > lastIndex) {
+            el.appendChild(document.createTextNode(text.slice(lastIndex, m.index)));
+          }
+          const raw = m[0];
+          const href = /^https?:\/\//i.test(raw) ? raw : "https://" + raw;
+          const a = document.createElement("a");
+          a.href = href;
+          a.textContent = raw;
+          a.target = "_blank";
+          a.rel = "noopener noreferrer";
+          el.appendChild(a);
+          lastIndex = URL_PATTERN.lastIndex;
+        }
+        if (lastIndex < text.length) {
+          el.appendChild(document.createTextNode(text.slice(lastIndex)));
+        }
+      }
+
       async function load() {
         const url =
           "https://sheets.googleapis.com/v4/spreadsheets/" +
@@ -342,7 +376,7 @@
 
           const descEl = document.createElement("div");
           descEl.className = "desc";
-          descEl.textContent = description;
+          appendLinkedText(descEl, description);
           detail.appendChild(descEl);
 
           const imgsWrap = document.createElement("div");
