@@ -68,7 +68,8 @@
         gap: 6px;
         padding: 4px 8px;
       }
-      #gallery img {
+      #gallery img,
+      #gallery video {
         height: 76px;
         width: auto;
         object-fit: cover;
@@ -144,7 +145,8 @@
         padding-bottom: 8px;
         -webkit-overflow-scrolling: touch;
       }
-      .detail img {
+      .detail img,
+      .detail video {
         height: 220px;
         width: auto;
         flex: 0 0 auto;
@@ -198,7 +200,8 @@
         .detail .imgs {
           grid-column: 1;
         }
-        .detail img {
+        .detail img,
+        .detail video {
           height: 140px;
         }
         #thumb {
@@ -247,9 +250,9 @@
       const SHEET_NAME = "Sheet1"; // the tab name at the bottom of your sheet
       /* ========================================================= */
 
-      // Columns B..P starting at row 3:
-      // B Project | C Practice | D Year | E Thumbnail | F..O image01..image10 | P Description
-      const RANGE = SHEET_NAME + "!B3:P";
+      // Columns B..R starting at row 3:
+      // B Project | C Practice | D Year | E Thumbnail | F..Q image01..image12 (image URL, or a direct video file link ending in .mp4/.webm/.mov) | R Description
+      const RANGE = SHEET_NAME + "!B3:R";
 
       const listEl = document.getElementById("list");
       const galleryEl = document.getElementById("gallery");
@@ -260,6 +263,13 @@
 
       function isImg(v) {
         return typeof v === "string" && /^https?:\/\//i.test(v.trim());
+      }
+
+      function isVideo(v) {
+        return (
+          typeof v === "string" &&
+          /^https?:\/\/.*\.(mp4|webm|mov|m4v)(\?.*)?$/i.test(v.trim())
+        );
       }
 
       async function load() {
@@ -294,19 +304,24 @@
           const practice = (r[1] || "").trim();
           const year = (r[2] || "").trim();
           const thumbUrl = (r[3] || "").trim();
-          const images = r
-            .slice(4, 14)
+          const media = r
+            .slice(4, 16)
             .map(function (x) {
               return (x || "").trim();
             })
-            .filter(isImg);
-          const description = (r[14] || "").trim();
+            .filter(function (v) {
+              return isImg(v) || isVideo(v);
+            })
+            .map(function (v) {
+              return { src: v, type: isVideo(v) ? "video" : "image" };
+            });
+          const description = (r[16] || "").trim();
 
           if (!project && !practice && !year) return;
           count++;
 
-          images.forEach(function (src) {
-            allImages.push({ src: src, alt: project });
+          media.forEach(function (item) {
+            allImages.push({ src: item.src, type: item.type, alt: project });
           });
 
           const row = document.createElement("div");
@@ -338,17 +353,28 @@
           function buildImages() {
             if (built) return;
             built = true;
-            if (images.length === 0) {
+            if (media.length === 0) {
               imgsWrap.innerHTML =
-                '<span class="empty">No images for this project.</span>';
+                '<span class="empty">No media for this project.</span>';
               return;
             }
-            images.forEach(function (src) {
-              const im = document.createElement("img");
-              im.loading = "lazy";
-              im.src = src;
-              im.alt = project;
-              imgsWrap.appendChild(im);
+            media.forEach(function (item) {
+              if (item.type === "video") {
+                const vid = document.createElement("video");
+                vid.src = item.src;
+                vid.controls = true;
+                vid.muted = true;
+                vid.loop = true;
+                vid.playsInline = true;
+                vid.preload = "metadata";
+                imgsWrap.appendChild(vid);
+              } else {
+                const im = document.createElement("img");
+                im.loading = "lazy";
+                im.src = item.src;
+                im.alt = project;
+                imgsWrap.appendChild(im);
+              }
             });
           }
 
@@ -388,6 +414,15 @@
           return;
         }
         allImages.forEach(function (item) {
+          if (item.type === "video") {
+            const vid = document.createElement("video");
+            vid.src = item.src;
+            vid.muted = true;
+            vid.playsInline = true;
+            vid.preload = "metadata";
+            galleryEl.appendChild(vid);
+            return;
+          }
           const im = document.createElement("img");
           im.loading = "lazy";
           im.src = item.src;
