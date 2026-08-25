@@ -87,6 +87,15 @@
         background-color: #214248;
       }
 
+      #gallery-note {
+        display: none;
+        padding: 4px 8px 12px;
+        color: var(--muted);
+      }
+      body.view-gallery #gallery-note {
+        display: block;
+      }
+
       .head,
       .row {
         display: grid;
@@ -160,6 +169,7 @@
         object-fit: cover;
         background: var(--hover);
         display: block;
+        cursor: crosshair;
       }
       .empty {
         color: var(--muted);
@@ -190,6 +200,26 @@
       #status {
         padding: 8px;
         color: var(--muted);
+      }
+
+      #lightbox {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.9);
+        align-items: center;
+        justify-content: center;
+        z-index: 100;
+        cursor: zoom-out;
+      }
+      #lightbox.show {
+        display: flex;
+      }
+      #lightbox img,
+      #lightbox video {
+        max-width: 92vw;
+        max-height: 92vh;
+        object-fit: contain;
       }
 
       @media (max-width: 640px) {
@@ -238,10 +268,16 @@
     </div>
 
     <div id="list"></div>
+    <div id="gallery-note">Click thumbnails to view in full size</div>
     <div id="gallery"></div>
     <div id="status">Loading…</div>
 
     <img id="thumb" alt="" />
+
+    <div id="lightbox">
+      <img id="lightbox-img" alt="" />
+      <video id="lightbox-video" controls muted playsinline></video>
+    </div>
 
     <br>
     <div class="decor">
@@ -265,6 +301,38 @@
       const galleryEl = document.getElementById("gallery");
       const statusEl = document.getElementById("status");
       const thumb = document.getElementById("thumb");
+      const lightbox = document.getElementById("lightbox");
+      const lightboxImg = document.getElementById("lightbox-img");
+      const lightboxVideo = document.getElementById("lightbox-video");
+
+      function openLightbox(item) {
+        lightboxVideo.pause();
+        if (item.type === "video") {
+          lightboxImg.style.display = "none";
+          lightboxVideo.style.display = "block";
+          lightboxVideo.src = item.src;
+          lightboxVideo.play();
+        } else {
+          lightboxVideo.style.display = "none";
+          lightboxImg.style.display = "block";
+          lightboxImg.src = item.src;
+          lightboxImg.alt = item.alt || "";
+        }
+        lightbox.classList.add("show");
+      }
+      function closeLightbox() {
+        lightbox.classList.remove("show");
+        lightboxVideo.pause();
+        lightboxVideo.removeAttribute("src");
+        lightboxImg.removeAttribute("src");
+      }
+      lightbox.addEventListener("click", closeLightbox);
+      lightboxVideo.addEventListener("click", function (e) {
+        e.stopPropagation();
+      });
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") closeLightbox();
+      });
 
       let allImages = [];
 
@@ -396,17 +464,22 @@
               if (item.type === "video") {
                 const vid = document.createElement("video");
                 vid.src = item.src;
-                vid.controls = true;
                 vid.muted = true;
                 vid.loop = true;
                 vid.playsInline = true;
                 vid.preload = "metadata";
+                vid.addEventListener("click", function () {
+                  openLightbox({ src: item.src, type: "video", alt: project });
+                });
                 imgsWrap.appendChild(vid);
               } else {
                 const im = document.createElement("img");
                 im.loading = "lazy";
                 im.src = item.src;
                 im.alt = project;
+                im.addEventListener("click", function () {
+                  openLightbox({ src: item.src, type: "image", alt: project });
+                });
                 imgsWrap.appendChild(im);
               }
             });
@@ -454,6 +527,9 @@
             vid.muted = true;
             vid.playsInline = true;
             vid.preload = "metadata";
+            vid.addEventListener("click", function () {
+              openLightbox(item);
+            });
             galleryEl.appendChild(vid);
             return;
           }
@@ -467,6 +543,9 @@
           });
           im.addEventListener("mouseleave", function () {
             thumb.classList.remove("show");
+          });
+          im.addEventListener("click", function () {
+            openLightbox(item);
           });
           galleryEl.appendChild(im);
         });
