@@ -184,25 +184,11 @@ h2 {
     top:85px;
     padding:20px 15px;
     width:300px;
-    height:373px;
+    height:390px;
     text-align:center;
     background-color:#f9fafb;
     border-top: 3px solid #214248;
 
-}
-
-.resumecontainer{
-    display:grid;
-    height:300px;
-    place-items:center;
-    background-color:#EDEDE9;
-}
-
-.resume {
-    width:500px;
-    position: relative;
-    margin-top: 11vh;
-    border:3px solid #214248;
 }
 
 .popup{
@@ -224,10 +210,10 @@ h2 {
 
 .workscontainer {
     z-index:4;
-    position:fixed;
-    top:475px;
     color: #ffffff;
     display:flex;
+    bottom:0;
+    position:fixed;
     flex-direction:horizontal;
     gap:10px; 
     width:100vw;
@@ -244,13 +230,13 @@ h2 {
 }
 
 .left {
-    width:60%;
+    width:50%;
 }
 .middle {
-    width:20%;
+    width:40%;
 }
 .right {
-    width:20%;
+    width:10%;
 }
 
 .contacting {
