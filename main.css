@@ -339,6 +339,34 @@ p {
 .hover-link {
     position:absolute;
     z-index:40;
-    
 
+
+}
+
+@media (max-width: 768px) {
+    /* Mobile: just the hero. The two lamp images fill the screen, the bio
+       card floats perfectly centered on top of them, and the Favorite
+       Projects section is dropped entirely to keep things simple. */
+    .imagecontainer {
+        height: 100vh;
+    }
+
+    .biocontainer {
+        position: static;
+    }
+    .bio {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 88%;
+        max-width: 320px;
+        height: auto;
+        max-height: 80vh;
+        overflow-y: auto;
+    }
+
+    .workscontainer {
+        display: none;
+    }
 }
