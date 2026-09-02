@@ -191,6 +191,10 @@ h2 {
 
 }
 
+#mobile-notice {
+    display: none;
+}
+
 .popup{
     display: none;
     position:relative;
@@ -352,18 +356,32 @@ p {
     }
 
     .biocontainer {
-        position: static;
-    }
-    .bio {
         position: fixed;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
         width: 88%;
         max-width: 320px;
+    }
+    .bio {
+        position: static;
+        width: 100%;
         height: auto;
-        max-height: 80vh;
+        max-height: 70vh;
         overflow-y: auto;
+    }
+    #mobile-notice {
+        display: block;
+        width: 100%;
+        margin-top: 10px;
+        text-align: center;
+        background-color: #f9fafb;
+        border: solid 1px #214248;
+        padding: 2.5px;
+        color: #214248;
     }
 
     .workscontainer {
