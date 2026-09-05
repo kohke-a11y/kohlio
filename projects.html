@@ -19,6 +19,15 @@
         --line: rgba(255, 255, 255, 0.18);
         --hover: #223b41;
       }
+      /* Branding & Design gets its own very light blue page background
+         (light theme only — dark mode keeps its own dark background). This
+         sets `background` directly rather than overriding the `--bg`
+         token, so #topbar and anything else drawn with var(--bg) — the
+         header bar, carousel buttons — stay white instead of turning blue
+         along with it. */
+      html:not([data-theme="dark"]) body:not(.view-list) {
+        background: #eef7fb;
+      }
       * {
         box-sizing: border-box;
         margin: 0;
@@ -40,7 +49,13 @@
       #topbar {
         position: sticky;
         top: 0;
+        /* Bleed out of body's own padding so the white background (and the
+           border below) reach the actual page edges, instead of leaving a
+           blue margin above/beside the header. */
+        margin: -24px -24px 0;
+        padding: 24px 24px 0;
         background: var(--bg);
+        border-bottom: 1.5px solid var(--fg);
         z-index: 20;
       }
       .nav {
@@ -95,10 +110,14 @@
         padding: 4px 8px 12px;
         color: var(--fg);
       }
+      #branding-note {
+        max-width: 75%;
+      }
 
       #branding {
         padding: 12px 8px 24px;
-        max-width: 1400px;
+        max-width: 1080px;
+        margin: 0 auto;
       }
       #branding h2 {
         font-size: 13px;
@@ -109,7 +128,7 @@
         margin-bottom: 8px;
       }
       #branding section {
-        margin-top: 24px;
+        margin-top: 64px;
       }
       .project-body {
         display: flex;
@@ -126,11 +145,12 @@
         .project-body {
           flex-direction: row;
           align-items: flex-start;
-          gap: 32px;
+          gap: 88px;
         }
         .project-body > p,
         .project-body > .desc {
           flex: 1;
+          max-width: 480px;
         }
         .project-body > p {
           margin-bottom: 0;
@@ -453,7 +473,7 @@
         <button id="btn-branding" type="button" class="active">Identity &amp; Graphic Design</button>
         <button id="btn-illustration" type="button">Illustration &amp; Concepts</button>
       </nav>
-      <div id="branding-note">PAGE UNDER CONSTRUCTION.</div>
+      <div id="branding-note">Centering on brand identity and graphic design, this page covers logo and visual identity systems, print-based work like letterpress and cyanotype, and front-end web development in the form of freelance projects, coursework, and hands-on instruction.</div>
       <div id="list-note">A place for sketches, narrative pieces, and speculative design. Exploring numerous artistic fields under the graphic design umbrella: illustration, sculpture, photography, typography, and more.</div>
       <div class="head" id="colhead">
         <span>Project</span>
