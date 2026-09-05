@@ -19,13 +19,13 @@
         --line: rgba(255, 255, 255, 0.18);
         --hover: #223b41;
       }
-      /* Branding & Design gets its own very light blue page background
+      /* Both projects.html views get a very light blue page background
          (light theme only — dark mode keeps its own dark background). This
          sets `background` directly rather than overriding the `--bg`
          token, so #topbar and anything else drawn with var(--bg) — the
          header bar, carousel buttons — stay white instead of turning blue
          along with it. */
-      html:not([data-theme="dark"]) body:not(.view-list) {
+      html:not([data-theme="dark"]) body {
         background: #eef7fb;
       }
       * {
@@ -50,13 +50,18 @@
         position: sticky;
         top: 0;
         /* Bleed out of body's own padding so the white background (and the
-           border below) reach the actual page edges, instead of leaving a
-           blue margin above/beside the header. */
+           border below, on the Branding view) reach the actual page edges,
+           instead of leaving a blue margin above/beside the header. */
         margin: -24px -24px 0;
         padding: 24px 24px 0;
         background: var(--bg);
-        border-bottom: 1.5px solid var(--fg);
         z-index: 20;
+      }
+      /* Only Branding & Design gets the divider border under its intro
+         text — Illustration & Concepts' own header (with its column
+         headings right below) doesn't need one. */
+      body:not(.view-list) #topbar {
+        border-bottom: 1.5px solid var(--fg);
       }
       .nav {
         display: flex;
