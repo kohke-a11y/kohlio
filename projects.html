@@ -98,7 +98,7 @@
 
       #branding {
         padding: 12px 8px 24px;
-        max-width: 640px;
+        max-width: 1400px;
       }
       #branding h2 {
         font-size: 13px;
@@ -111,25 +111,60 @@
       #branding section {
         margin-top: 24px;
       }
+      .project-body {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+      .carousel-stack {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        max-width: 460px;
+      }
+      @media (min-width: 641px) {
+        .project-body {
+          flex-direction: row;
+          align-items: flex-start;
+          gap: 32px;
+        }
+        .project-body > p,
+        .project-body > .desc {
+          flex: 1;
+        }
+        .project-body > p {
+          margin-bottom: 0;
+        }
+        .project-body > .desc p:last-child {
+          margin-bottom: 0;
+        }
+        .project-body > .carousel,
+        .project-body > .carousel-stack {
+          flex: 1 1 460px;
+        }
+      }
       .carousel {
         position: relative;
-        margin-top: 8px;
+        max-width: 460px;
       }
       .carousel-track {
-        display: flex;
         overflow: hidden;
-        transition: transform 0.25s ease;
+        min-height: 160px;
+      }
+      .carousel-slides {
+        display: flex;
+        transition: transform 0.25s ease, height 0.25s ease;
       }
       .carousel-slide {
         flex: 0 0 100%;
-        height: 220px;
         background: var(--hover);
       }
-      .carousel-slide img {
+      .carousel-slide img,
+      .carousel-slide video {
         width: 100%;
         height: 100%;
-        object-fit: cover;
         display: block;
+        cursor: crosshair;
       }
       .carousel-prev,
       .carousel-next {
@@ -143,12 +178,65 @@
         line-height: 1;
         padding: 4px 8px;
         cursor: pointer;
+        opacity: 0.5;
+        transition: opacity 0.15s ease;
+      }
+      .carousel-prev:hover,
+      .carousel-next:hover {
+        opacity: 1;
       }
       .carousel-prev {
         left: 6px;
       }
       .carousel-next {
         right: 6px;
+      }
+      /* These two carousels' images vary a lot in height, which shifts
+         top:50% arrows around between slides. Pin them to a fixed spot
+         instead so they don't move and cause accidental misclicks. */
+      .carousel-stack .carousel-prev,
+      .carousel-stack .carousel-next {
+        top: 12px;
+        transform: none;
+      }
+      .carousel-thumbs {
+        display: flex;
+        flex-wrap: nowrap;
+        gap: 6px;
+        margin-top: 6px;
+        overflow-x: auto;
+        padding-bottom: 2px;
+        -webkit-overflow-scrolling: touch;
+      }
+      .carousel-thumb {
+        width: 64px;
+        height: 64px;
+        flex: 0 0 auto;
+        padding: 0;
+        border: 1px solid transparent;
+        background: var(--hover);
+        cursor: pointer;
+        opacity: 0.55;
+        transition: opacity 0.15s ease, border-color 0.15s ease;
+      }
+      .carousel-thumb:hover {
+        opacity: 0.85;
+      }
+      .carousel-thumb.active {
+        opacity: 1;
+        border-color: var(--fg);
+      }
+      .carousel-thumb img,
+      .carousel-thumb video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+      .carousel-counter {
+        margin-top: 6px;
+        color: var(--muted);
+        font-size: 12px;
       }
 
       .head,
@@ -362,7 +450,7 @@
     <div id="topbar">
       <nav class="nav">
         <a href="index.html">Homepage</a>
-        <button id="btn-branding" type="button" class="active">Branding &amp; Graphic Design</button>
+        <button id="btn-branding" type="button" class="active">Identity &amp; Graphic Design</button>
         <button id="btn-illustration" type="button">Illustration &amp; Concepts</button>
       </nav>
       <div id="branding-note">PAGE UNDER CONSTRUCTION.</div>
@@ -377,60 +465,169 @@
     <div id="branding">
       <!-- Duplicate a block like this per project once real content is ready -->
       <section>
-        <h2>Project title 1</h2>
-        <p>Project description.</p>
-        <div class="carousel">
-          <div class="carousel-track">
-            <div class="carousel-slide"><img alt="Project title 1"><!-- paste an image URL into the src="" above --></div>
-            <div class="carousel-slide"><img alt="Project title 1"><!-- paste an image URL into the src="" above --></div>
-            <div class="carousel-slide"><img alt="Project title 1"><!-- paste an image URL into the src="" above --></div>
+        <h2>Lead Front-End Web Developer for OSC</h2>
+        <div class="project-body">
+          <p>Open Source Climbing (OSC) is a free training resource app built for college climbing teams. I designed and built a complete visual asset library for the platform — including a color palette, logo, custom emoji set, buttons, and input components — along with a site-wide dark mode toggle. Working closely with the back-end team, I maintained clear, consistent communication to meet deadlines and project goals. Built with HTML, CSS, and JavaScript, with hands-on experience picking up React along the way. The project is ongoing and live at opensourceclimbing.com.</p>
+          <div class="carousel-stack">
+            <div class="carousel">
+              <div class="carousel-track">
+                <div class="carousel-slides">
+                  <div class="carousel-slide"><img src="https://i.postimg.cc/66DTkHzJ/image.png" alt="Project title 1"> </div>
+                  <div class="carousel-slide"><img src="https://i.postimg.cc/4xc3BJsK/1.png" alt="Project title 1"> </div>
+                  <div class="carousel-slide"><img src="https://i.postimg.cc/vZnm3Qbf/2.png" alt="Project title 1"> </div>
+                  <div class="carousel-slide"><img src="https://i.postimg.cc/6QNpPDpT/3.png" alt="Project title 1"> </div>
+                  <div class="carousel-slide"><img src="https://i.postimg.cc/jSfjZstN/4.png" alt="Project title 1"> </div>
+                  <div class="carousel-slide"><img src="https://i.postimg.cc/nLthW6hL/5.png" alt="Project title 1"> </div>
+                  <div class="carousel-slide"><img src="https://i.postimg.cc/CKVx2Wxf/6.png" alt="Project title 1"> </div>
+                  <div class="carousel-slide"><img src="https://i.postimg.cc/Pqk57B5Y/7.png"alt="Project title 1"></div>
+                  <div class="carousel-slide"><img src="https://i.postimg.cc/vmdZKpZ5/8.png" alt="Project title 1"> </div>
+                  <div class="carousel-slide"><img src="https://i.postimg.cc/nLthW6hv/9.png" alt="Project title 1"> </div>
+                  <div class="carousel-slide"><img src="https://i.postimg.cc/BvGnzdnB/10.png"> </div>
+                  <div class="carousel-slide"> <img src="https://i.postimg.cc/hGqtYHt2/11.png"></div>
+                  <div class="carousel-slide"><img src="https://i.postimg.cc/vmdZKpZ3/12.png"> </div>
+                  <div class="carousel-slide"><img src="https://i.postimg.cc/FKQH62Hq/13.png" alt="Project title 1"></div>
+                  <div class="carousel-slide"><img src="https://i.postimg.cc/ZqF5zVWL/14.png" alt="Project title 1"></div>
+                  <div class="carousel-slide"><img src="https://i.postimg.cc/3wCxQnk1/15.png" alt="Project title 1"></div>
+                  <div class="carousel-slide"><img src="https://i.postimg.cc/mrNgW8Pw/16.png" alt="Project title 1"></div>
+                  <div class="carousel-slide"><img src="https://i.postimg.cc/CKHxpmRQ/19.png" alt="Project title 1"> </div>
+                  <div class="carousel-slide"><img src="https://i.postimg.cc/yNX8CvD5/20.png" alt="Project title 1"></div>
+                  <div class="carousel-slide"> <img src="https://i.postimg.cc/5tq2WnXD/21.png" alt="Project title 1"></div>
+                  <div class="carousel-slide"> <img src="https://i.postimg.cc/R0QZxXWj/22.png" alt="Project title 1"> </div>
+                  <div class="carousel-slide"> <img src="https://i.postimg.cc/d0mVc4hb/23.png" alt="Project title 1"> </div>
+                  <div class="carousel-slide"><img src="https://i.postimg.cc/nLYhf0sf/24.png" alt="Project title 1"> </div>
+                  <div class="carousel-slide"> <img src="https://i.postimg.cc/25FSN2qf/25.png" alt="Project title 1"> </div>
+                  <div class="carousel-slide"> <img src="https://i.postimg.cc/mrNgW8c4/26.png" alt="Project title 1"> </div>
+                  <div class="carousel-slide"> <img src="https://i.postimg.cc/VNBkPDS1/27.png" alt="Project title 1"></div>
+                  <div class="carousel-slide"> <img src="https://i.postimg.cc/R0QZxX3v/28.png" alt="Project title 1"></div>
+                  <div class="carousel-slide"><img src="https://i.postimg.cc/TPq3vCyR/29.png" alt="Project title 1"></div>
+                  <div class="carousel-slide"><img src="https://i.postimg.cc/mrNgW8cL/30.png" alt="Project title 1"></div>
+                </div>
+              </div>
+              <button class="carousel-prev" type="button" aria-label="Previous image">&larr;</button>
+              <button class="carousel-next" type="button" aria-label="Next image">&rarr;</button>
+              <div class="carousel-thumbs"></div>
+              <div class="carousel-counter"></div>
+            </div>
+            <div class="carousel">
+              <div class="carousel-track">
+                <div class="carousel-slides">
+                  <div class="carousel-slide"> <img src="https://i.postimg.cc/Pq3YkXvx/1.png" alt="Project title 1"> </div>
+                  <div class="carousel-slide"> <img src="https://i.postimg.cc/9MDTm6yM/2.png" alt="Project title 1"> </div>
+                  <div class="carousel-slide"> <img src="https://i.postimg.cc/wv1JqCDq/3.png" alt="Project title 1"> </div>
+                  <div class="carousel-slide"> <img src="https://i.postimg.cc/Hxr5YqbW/4.png" alt="Project title 1"> </div>
+                  <div class="carousel-slide"> <img src="https://i.postimg.cc/wv1JqCDB/5.png" alt="Project title 1"> </div>
+                  <div class="carousel-slide"> <img src="https://i.postimg.cc/j5DNxpy7/6.png" alt="Project title 1"> </div>
+                  <div class="carousel-slide"> <img src="https://i.postimg.cc/FRYcrM0y/7.png" alt="Project title 1"> </div>
+                  <div class="carousel-slide"> <img src="https://i.postimg.cc/NMKTs3Rm/8.png " alt="Project title 1"> </div>
+                  <div class="carousel-slide"> <img src="https://i.postimg.cc/Kz1LG6tn/9.png" alt="Project title 1"> </div>
+                  <div class="carousel-slide"> <img src="https://i.postimg.cc/3Rkp8s2C/10.png" alt="Project title 1"> </div>
+                  <div class="carousel-slide"><img src="https://i.postimg.cc/qRWKz1G6/11.png" alt="Project title 1"> </div>                  
+                  <div class="carousel-slide"><img src="https://i.postimg.cc/PxCZXg14/12.png" alt="Project title 1"> </div>
+
+                </div>
+              </div>
+              <button class="carousel-prev" type="button" aria-label="Previous image">&larr;</button>
+              <button class="carousel-next" type="button" aria-label="Next image">&rarr;</button>
+              <div class="carousel-thumbs"></div>
+              <div class="carousel-counter"></div>
+            </div>
           </div>
-          <button class="carousel-prev" type="button" aria-label="Previous image">&larr;</button>
-          <button class="carousel-next" type="button" aria-label="Next image">&rarr;</button>
         </div>
       </section>
 
       <section>
-        <h2>Project title 2</h2>
-        <p>Project description.</p>
-        <div class="carousel">
-          <div class="carousel-track">
-            <div class="carousel-slide"><!-- <img src="path/to/image1.jpg" alt="Project title 2"> --></div>
-            <div class="carousel-slide"><!-- <img src="path/to/image2.jpg" alt="Project title 2"> --></div>
-            <div class="carousel-slide"><!-- <img src="path/to/image3.jpg" alt="Project title 2"> --></div>
+        <h2>Instruction at Studio Two Three</h2>
+        <div class="project-body">
+          <div class="desc">
+            <p>At Studio Two Three, I teach Letterpress instruction covering type nomenclature, composing type, press operation, and press cleaning and setup. The studio's traditional print shop houses several vintage presses donated by museums and private collectors, including the Showcard proof press, the Nolan proof press, and the Challenge 15KA proof press. Sessions cover the fundamentals of printing with both metal and wood type, along with a guided tour of the studio's extensive, century-old type collection that I've personally organized, cleaned, and catalogued. Students leave with their own prints, dried on a convection dryer. These classes typically run in groups of 3–5, though I also teach one-on-one sessions.</p>
+            <p>I also lead a more approachable beginner class exploring the art of Letterpress using flat LEGO pieces: students compose their own artworks while I demonstrate the studio's various presses, offering a low-pressure introduction to analog printing. These workshops usually run in groups of 5 or more.</p>
+            <p>My Cyanotype instruction explores printing with natural materials, using photographic images from film or transparencies. I teach both natural UV sunlight exposure and the studio's indoor exposure unit for cloudy days, in classes of up to 15 students. Cyanotype printing is one of my creative passions, and I'm drawn to working with natural materials within artistic practice. I've recently begun experimenting with chlorotype printing and look forward to exploring it further.</p>
           </div>
-          <button class="carousel-prev" type="button" aria-label="Previous image">&larr;</button>
-          <button class="carousel-next" type="button" aria-label="Next image">&rarr;</button>
+          <div class="carousel">
+            <div class="carousel-track">
+              <div class="carousel-slides">
+                 <div class="carousel-slide"><img src="https://i.postimg.cc/tRLt7GHD/Cyanotype2.png" alt="Project title 2"><!-- paste an image URL into the src="" above --></div>
+                 <div class="carousel-slide"><img src="https://i.postimg.cc/qBDks6Hg/Cyanotype1.png" alt="Project title 2"><!-- paste an image URL into the src="" above --></div>
+                <div class="carousel-slide"><img src="https://i.postimg.cc/m214NMJC/Letterpress1.png"  alt="Project title 2"><!-- paste an image URL into the src="" above --></div>                
+                <div class="carousel-slide"><img src="https://i.postimg.cc/TYjx8J9P/leog-(1).png"  alt="Project title 2"><!-- paste an image URL into the src="" above --></div>  
+
+                <div class="carousel-slide"><img src="https://i.postimg.cc/GpGT4J4Y/letterpress2.png"  alt="Project title 2"><!-- paste an image URL into the src="" above --></div>  
+                <div class="carousel-slide"><img src="https://i.postimg.cc/wMmWNz2V/LEGO-LETTERPRESS.png"  alt="Project title 2"><!-- paste an image URL into the src="" above --></div>
+
+                
+                
+
+
+              </div>
+            </div>
+            <button class="carousel-prev" type="button" aria-label="Previous image">&larr;</button>
+            <button class="carousel-next" type="button" aria-label="Next image">&rarr;</button>
+            <div class="carousel-thumbs"></div>
+            <div class="carousel-counter"></div>
+          </div>
         </div>
       </section>
 
       <section>
-        <h2>Project title 3</h2>
-        <p>Project description.</p>
-        <div class="carousel">
-          <div class="carousel-track">
-            <div class="carousel-slide"><!-- <img src="path/to/image1.jpg" alt="Project title 3"> --></div>
-            <div class="carousel-slide"><!-- <img src="path/to/image2.jpg" alt="Project title 3"> --></div>
-            <div class="carousel-slide"><!-- <img src="path/to/image3.jpg" alt="Project title 3"> --></div>
+        <h2>Branding Examples</h2>
+        <div class="project-body">
+          <p>A collection of freelance and passion-project branding work, including logo design for the local band Zen-X, menu design for Kokee Tea (a tea shop I worked at), and an illustrated logo and brand identity for Neuro at VCU Club. Additional projects explore typeface identity and business vision boards, each focused on capturing the feel and message behind the product or organization.</p>
+          <div class="carousel">
+            <div class="carousel-track">
+              <div class="carousel-slides">
+                <div class="carousel-slide"> <img src="https://i.postimg.cc/3rBs4WKr/2-font.png" alt="Project title 3"> </div>
+                <div class="carousel-slide"> <img src="https://i.postimg.cc/tR5KZ7Xn/3-font.png" alt="Project title 3"> </div>
+                <div class="carousel-slide"> <img src="https://i.postimg.cc/hPtH9gj9/5-branding.png" alt="Project title 3"> </div>
+                <div class="carousel-slide"> <img src="https://i.postimg.cc/kXgkx94j/6-branding.png" alt="Project title 3"> </div>
+                <div class="carousel-slide"> <img src="https://i.postimg.cc/bNwKQ8rX/7-branding.png" alt="Project title 3"> </div>
+                <div class="carousel-slide"> <img src="https://i.postimg.cc/YC20gJWR/Neuro.png" alt="Project title 3"> </div>
+                <div class="carousel-slide"> <img src="https://i.postimg.cc/BZMzZyg7/Kokee-Tea-Hot-Tea2.jpg" alt="Project title 3"> </div>
+                <div class="carousel-slide"> <img src="https://i.postimg.cc/sDHbm8Q8/8-bandlogo.jpg" alt="Project title 3"> </div>
+              </div>
+            </div>
+            <button class="carousel-prev" type="button" aria-label="Previous image">&larr;</button>
+            <button class="carousel-next" type="button" aria-label="Next image">&rarr;</button>
+            <div class="carousel-thumbs"></div>
+            <div class="carousel-counter"></div>
           </div>
-          <button class="carousel-prev" type="button" aria-label="Previous image">&larr;</button>
-          <button class="carousel-next" type="button" aria-label="Next image">&rarr;</button>
         </div>
       </section>
 
-      <section>
-        <h2>Project title 4</h2>
-        <p>Project description.</p>
-        <div class="carousel">
-          <div class="carousel-track">
-            <div class="carousel-slide"><!-- <img src="path/to/image1.jpg" alt="Project title 4"> --></div>
-            <div class="carousel-slide"><!-- <img src="path/to/image2.jpg" alt="Project title 4"> --></div>
-            <div class="carousel-slide"><!-- <img src="path/to/image3.jpg" alt="Project title 4"> --></div>
+        <section>
+        <h2>Poster & Zine Archive</h2>
+        <div class="project-body">
+          <p>Assorted posters and zines made over several years following various interests at the time or assignments for class. Many of these posters are designed to live digitally and that reflects in their style and colors, some of them being moving posters that have elements of them being animated. These posters and zines were created in artistic spaces that value controlled chaos and creativity.</p>
+          <div class="carousel">
+            <div class="carousel-track">
+              <div class="carousel-slides">
+                <div class="carousel-slide"><video src="https://res.cloudinary.com/vm72268t/video/upload/v1786637273/Asemics.mp4"></video></div>
+                <div class="carousel-slide"><video src="https://res.cloudinary.com/vm72268t/video/upload/v1786639677/Screen_Recording_2026-08-13_at_12.46.03_PM.mp4"></video></div>
+                <div class="carousel-slide"> <img src="https://i.postimg.cc/rsKNwhVf/2-closet.jpg" alt="Project title 4"> </div>                
+                <div class="carousel-slide"> <img src="https://i.postimg.cc/7YJNvQQk/3-connect.png" alt="Project title 4"> </div>                           
+                <div class="carousel-slide"> <img src="https://i.postimg.cc/LsDtBdhv/5-spooncolection.png" alt="Project title 4"> </div>
+                <div class="carousel-slide"> <img src="https://i.postimg.cc/Hs12Q12m/POKEMONZINE-Page-1.jpg" alt="Project title 4"> </div> 
+                <div class="carousel-slide"> <img src="https://i.postimg.cc/q7wsXfzH/11-peppers.png" alt="Project title 4"> </div>                
+                <div class="carousel-slide"> <img src="https://i.postimg.cc/YSR6fcjQ/6-cake.png" alt="Project title 4"> </div>               
+                <div class="carousel-slide"> <img src="https://i.postimg.cc/nhCCrCDr/vintage1.png" alt="Project title 4"> </div>
+
+
+
+
+                
+
+
+              </div>
+            </div>
+            <button class="carousel-prev" type="button" aria-label="Previous image">&larr;</button>
+            <button class="carousel-next" type="button" aria-label="Next image">&rarr;</button>
+            <div class="carousel-thumbs"></div>
+            <div class="carousel-counter"></div>
           </div>
-          <button class="carousel-prev" type="button" aria-label="Previous image">&larr;</button>
-          <button class="carousel-next" type="button" aria-label="Next image">&rarr;</button>
         </div>
       </section>
+
+
+
     </div>
 
     <div id="list"></div>
@@ -716,19 +913,159 @@
 
       document.querySelectorAll(".carousel").forEach(function (carousel) {
         const track = carousel.querySelector(".carousel-track");
+        const slidesTrack = carousel.querySelector(".carousel-slides");
         const slides = carousel.querySelectorAll(".carousel-slide");
+        const thumbsEl = carousel.querySelector(".carousel-thumbs");
+        const counterEl = carousel.querySelector(".carousel-counter");
+        const prevBtn = carousel.querySelector(".carousel-prev");
+        const nextBtn = carousel.querySelector(".carousel-next");
+        const thumbs = [];
         let index = 0;
-        function update() {
-          track.style.transform = "translateX(-" + index * 100 + "%)";
+
+        // A slide's media is either an <img> or a <video>; this reads
+        // whichever is present and returns its natural pixel size.
+        function mediaSize(media) {
+          if (!media) return null;
+          if (media.tagName === "VIDEO") {
+            return media.videoWidth ? { w: media.videoWidth, h: media.videoHeight } : null;
+          }
+          return media.naturalWidth ? { w: media.naturalWidth, h: media.naturalHeight } : null;
         }
-        carousel.querySelector(".carousel-prev").addEventListener("click", function () {
-          index = (index - 1 + slides.length) % slides.length;
+
+        // Keeps the prev/next arrows at a fixed vertical spot, always based
+        // on the first slide's proportions — never the currently-shown
+        // slide's. Otherwise, since each image can be a different height,
+        // the arrows would hop to a new position on every navigation and
+        // invite a misclick.
+        function positionArrows() {
+          const refMedia = slides[0] && slides[0].querySelector("img, video");
+          const refSize = mediaSize(refMedia);
+          let height = 160; // matches the CSS min-height fallback
+          if (refSize) {
+            height = (track.clientWidth * refSize.h) / refSize.w;
+          }
+          const top = height / 2 + "px";
+          prevBtn.style.top = top;
+          nextBtn.style.top = top;
+        }
+
+        // Sizes the current slide to its own media's aspect ratio, so each
+        // image/video shows in full, uncropped and undistorted. This must be
+        // set on .carousel-slides (the element that actually gets
+        // translated), not .carousel-track — .carousel-track is the static
+        // viewport that clips the slides; if it moved too, its
+        // overflow:hidden boundary would slide away with the content
+        // instead of staying put.
+        function resizeToSlide() {
+          const media = slides[index].querySelector("img, video");
+          const size = mediaSize(media);
+          if (size) {
+            slidesTrack.style.height = (track.clientWidth * size.h) / size.w + "px";
+          } else {
+            slidesTrack.style.height = "";
+          }
+        }
+
+        // Reflects the current slide in the thumbnail strip (active
+        // highlight) and the "n / total" counter underneath the carousel.
+        function updateStatus() {
+          thumbs.forEach(function (t, i) {
+            t.classList.toggle("active", i === index);
+          });
+          if (counterEl) {
+            counterEl.textContent = slides.length ? index + 1 + " / " + slides.length : "";
+          }
+        }
+
+        function update() {
+          slidesTrack.style.transform = "translateX(-" + index * 100 + "%)";
+          resizeToSlide();
+          updateStatus();
+        }
+
+        function goTo(i) {
+          index = i;
           update();
+        }
+
+        slides.forEach(function (slide, i) {
+          const media = slide.querySelector("img, video");
+          const isVideoMedia = media && media.tagName === "VIDEO";
+
+          // Thumbnail preview for this slide, click to jump straight to it.
+          if (thumbsEl) {
+            const thumbBtn = document.createElement("button");
+            thumbBtn.type = "button";
+            thumbBtn.className = "carousel-thumb";
+            thumbBtn.setAttribute("aria-label", "Go to image " + (i + 1));
+            if (media && media.getAttribute("src")) {
+              let thumbMedia;
+              if (isVideoMedia) {
+                thumbMedia = document.createElement("video");
+                thumbMedia.src = media.src;
+                thumbMedia.muted = true;
+                thumbMedia.playsInline = true;
+                thumbMedia.preload = "metadata";
+              } else {
+                thumbMedia = document.createElement("img");
+                thumbMedia.src = media.src;
+                thumbMedia.alt = media.alt || "";
+              }
+              thumbBtn.appendChild(thumbMedia);
+            }
+            thumbBtn.addEventListener("click", function () {
+              goTo(i);
+            });
+            thumbsEl.appendChild(thumbBtn);
+            thumbs.push(thumbBtn);
+          }
+
+          if (!media) return;
+
+          if (isVideoMedia) {
+            media.muted = true;
+            media.loop = true;
+            media.playsInline = true;
+            media.preload = "metadata";
+          }
+
+          const ready = isVideoMedia ? media.readyState >= 1 : media.complete;
+          const readyEvent = isVideoMedia ? "loadedmetadata" : "load";
+          if (ready) {
+            if (slides[index] === slide) resizeToSlide();
+            if (i === 0) positionArrows();
+          } else {
+            media.addEventListener(readyEvent, function () {
+              if (slides[index] === slide) resizeToSlide();
+              if (i === 0) positionArrows();
+            });
+          }
+          if (media.getAttribute("src")) {
+            media.addEventListener("click", function () {
+              openLightbox({
+                src: media.src,
+                type: isVideoMedia ? "video" : "image",
+                alt: media.alt || "",
+              });
+            });
+          }
         });
-        carousel.querySelector(".carousel-next").addEventListener("click", function () {
-          index = (index + 1) % slides.length;
-          update();
+
+        prevBtn.addEventListener("click", function () {
+          goTo((index - 1 + slides.length) % slides.length);
         });
+        nextBtn.addEventListener("click", function () {
+          goTo((index + 1) % slides.length);
+        });
+
+        window.addEventListener("resize", function () {
+          resizeToSlide();
+          positionArrows();
+        });
+
+        resizeToSlide();
+        positionArrows();
+        updateStatus();
       });
 
       load();
