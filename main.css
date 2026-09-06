@@ -32,9 +32,10 @@ body{
     z-index:1;
     position:fixed;
     top:10px;
+    left:50%;
+    transform:translateX(-50%);
     padding-bottom:15px;
     padding-top:20px;
-    padding-left:20px;
 }
 
 .blurb {

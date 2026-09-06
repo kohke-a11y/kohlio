@@ -4,29 +4,26 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Index</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    />
     <style>
       :root {
-        --bg: #f9fafb;
+        --bg: #ffffff;
         --fg: #214248;
         --muted: #40808C;
         --line: rgb(186, 188, 195);
-        --hover: #DCECEF;
+        --hover: #DDE7EE;
       }
       :root[data-theme="dark"] {
-        --bg: #1b2e33;
+        --bg: #192833;
         --fg: #eef4f5;
         --muted: #8fbfc7;
         --line: rgba(255, 255, 255, 0.18);
         --hover: #223b41;
-      }
-      /* Both projects.html views get a very light blue page background
-         (light theme only — dark mode keeps its own dark background). This
-         sets `background` directly rather than overriding the `--bg`
-         token, so #topbar and anything else drawn with var(--bg) — the
-         header bar, carousel buttons — stay white instead of turning blue
-         along with it. */
-      html:not([data-theme="dark"]) body {
-        background: #eef7fb;
       }
       * {
         box-sizing: border-box;
@@ -37,6 +34,7 @@
       body {
         background: var(--bg);
         color: var(--fg);
+        transition: background-color 0.3s ease, color 0.3s ease;
       }
       body {
         font-family: "SF Mono", ui-monospace, "Menlo", "Consolas", monospace;
@@ -53,15 +51,53 @@
            border below, on the Branding view) reach the actual page edges,
            instead of leaving a blue margin above/beside the header. */
         margin: -24px -24px 0;
-        padding: 24px 24px 0;
-        background: var(--bg);
+        padding: 24px 24px 14px;
+        background: var(--header-bg, var(--bg));
+        border-bottom: 4px solid var(--header-desc-border, #436C89);
+        transition: background-color 0.3s ease, border-color 0.3s ease;
         z-index: 20;
       }
-      /* Only Branding & Design gets the divider border under its intro
-         text — Illustration & Concepts' own header (with its column
-         headings right below) doesn't need one. */
-      body:not(.view-list) #topbar {
-        border-bottom: 1.5px solid var(--fg);
+      /* Subtle fade where the page content scrolls in under the sticky
+         header, rather than an abrupt cut. Anchored to #topbar itself (not
+         a separate fixed element) so it always sits exactly at the
+         header's bottom edge regardless of how tall the header currently
+         is, and scrolls with it. It only overlays the page below — the
+         header's own background/content is untouched. Uses the page's own
+         background (--bg), not the header's, so it blends with the page
+         content rather than the header color. Branding & Design only —
+         Illustration & Concepts doesn't get this fade.
+         top is 100% + 4px (not just 100%) because 100% lands at the inner
+         edge of #topbar's 4px border — right at that edge, the fade's own
+         opaque starting color was painting directly over the border and
+         hiding it. The +4px clears the border so it stays visible. */
+      body:not(.view-list) #topbar::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: calc(100% + 4px);
+        height: 50px;
+        pointer-events: none;
+        background: linear-gradient(to bottom, var(--bg), transparent);
+      }
+      /* Header color scheme, identical across both views (Identity and
+         Illustration): a dark navy header with white active-tab/intro
+         text in light mode, and a #436C89 header with dark #192833
+         active-tab/intro text plus white inactive-nav text in dark mode
+         (an intentional inversion, not a mistake — --fg literally flips
+         from the brightest color to the darkest). --header-desc-border
+         (same #DDE7EE in both themes) drives #topbar's own bottom border
+         (below), so it spans the full page width rather than being
+         limited to #branding-note's/#list-note's own (narrower) box. */
+      html:not([data-theme="dark"]) #topbar {
+        --header-bg: #1C3244;
+        --fg: #ffffff;
+        --header-desc-border: #DDE7EE;
+      }
+      html[data-theme="dark"] #topbar {
+        --header-bg: #436C89;
+        --fg: #192833;
+        --header-desc-border: #223644;
       }
       .nav {
         display: flex;
@@ -88,6 +124,28 @@
         color: var(--fg);
         border-bottom: 1.5px solid var(--fg);
       }
+      /* Swapping the inactive nav links' color for the header context —
+         :not(.active) keeps this from outranking the active-tab color
+         rule above, which needs to stay var(--fg). Light mode: #436C89
+         (--muted itself is left alone, since it's also used elsewhere on
+         the page, like the Year/Practice columns). Dark mode: white,
+         since the header background itself became #436C89 there, and the
+         nav text would otherwise vanish into it. */
+      html:not([data-theme="dark"]) .nav button:not(.active),
+      html:not([data-theme="dark"]) .nav a {
+        color: #436C89;
+      }
+      html[data-theme="dark"] .nav button:not(.active),
+      html[data-theme="dark"] .nav a {
+        color: #ffffff;
+      }
+      /* Matches the header description text color in dark mode, for the
+         same readability reason: var(--fg) is #192833 there, too dark
+         against the #436C89 header background. */
+      html[data-theme="dark"] .nav button.active {
+        color: #98B7CD;
+        border-bottom-color: #98B7CD;
+      }
 
       #colhead,
       #list,
@@ -96,6 +154,7 @@
       }
       body.view-list #colhead {
         display: grid;
+        margin-top: 24px;
       }
       body.view-list #list {
         display: block;
@@ -114,9 +173,19 @@
       #branding-note {
         padding: 4px 8px 12px;
         color: var(--fg);
+        font-family: "Open Sans", sans-serif;
+        font-weight: 300;
       }
       #branding-note {
         max-width: 75%;
+      }
+      /* Dark mode visibility fix: var(--fg) inside the header is #192833
+         there (see the header color scheme above), which was too dark to
+         read against the #436C89 header background at light weight. */
+      html[data-theme="dark"] #list-note,
+      html[data-theme="dark"] #branding-note {
+        color: #98B7CD;
+        font-weight: 400;
       }
 
       #branding {
@@ -125,15 +194,36 @@
         margin: 0 auto;
       }
       #branding h2 {
-        font-size: 13px;
-        margin-top: 24px;
+        font-size: 18px;
+        font-weight: 300;
+        /* Tightened from the inherited 1.5 so the glyphs sit right at the
+           top of the line box — otherwise the heading's line-height left
+           visible air above the text that the carousel (which fills its
+           box edge-to-edge) doesn't have, so the two looked misaligned
+           even though their boxes start at the exact same pixel. */
+        line-height: 1;
         margin-bottom: 8px;
       }
       #branding p {
         margin-bottom: 8px;
       }
-      #branding section {
-        margin-top: 64px;
+      .project-body p {
+        font-family: "Open Sans", sans-serif;
+        font-weight: 600;
+        font-size: 15px;
+      }
+      .project-body p a {
+        color: var(--muted);
+        text-decoration: underline;
+      }
+      .project-body p a:hover {
+        color: var(--fg);
+      }
+      #branding section:first-child {
+        margin-top: 32px;
+      }
+      #branding section + section {
+        margin-top: 96px;
       }
       .project-body {
         display: flex;
@@ -152,13 +242,9 @@
           align-items: flex-start;
           gap: 88px;
         }
-        .project-body > p,
         .project-body > .desc {
           flex: 1;
           max-width: 480px;
-        }
-        .project-body > p {
-          margin-bottom: 0;
         }
         .project-body > .desc p:last-child {
           margin-bottom: 0;
@@ -181,6 +267,7 @@
         transition: transform 0.25s ease, height 0.25s ease;
       }
       .carousel-slide {
+        position: relative;
         flex: 0 0 100%;
         background: var(--hover);
       }
@@ -189,7 +276,58 @@
         width: 100%;
         height: 100%;
         display: block;
-        cursor: crosshair;
+        cursor: pointer;
+      }
+      /* Frosted-glass play icon over any video thumbnail, so it's obvious
+         at a glance that it's a clickable/playable video and not a still
+         image. Applied via :has() to whatever wraps the <video> — the
+         wrapper differs per context (carousel slide, thumbnail button, or
+         the .video-wrap added around videos in the Illustration detail
+         view) — so one rule set covers all of them. */
+      .carousel-slide:has(video)::after,
+      .carousel-thumb:has(video)::after,
+      .video-wrap:has(video)::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 46px;
+        height: 46px;
+        transform: translate(-50%, -50%);
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.22);
+        backdrop-filter: blur(8px) saturate(140%);
+        -webkit-backdrop-filter: blur(8px) saturate(140%);
+        border: 1px solid rgba(255, 255, 255, 0.45);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+        pointer-events: none;
+      }
+      .carousel-slide:has(video)::before,
+      .carousel-thumb:has(video)::before,
+      .video-wrap:has(video)::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: calc(50% + 2px);
+        width: 0;
+        height: 0;
+        border-style: solid;
+        border-width: 8px 0 8px 13px;
+        border-color: transparent transparent transparent #ffffff;
+        transform: translate(-50%, -50%);
+        z-index: 1;
+        pointer-events: none;
+      }
+      /* Smaller badge for the 64px thumbnail strip. */
+      .carousel-thumb:has(video)::after {
+        width: 22px;
+        height: 22px;
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+      }
+      .carousel-thumb:has(video)::before {
+        left: calc(50% + 1px);
+        border-width: 4px 0 4px 6px;
       }
       .carousel-prev,
       .carousel-next {
@@ -234,6 +372,7 @@
         -webkit-overflow-scrolling: touch;
       }
       .carousel-thumb {
+        position: relative;
         width: 64px;
         height: 64px;
         flex: 0 0 auto;
@@ -279,7 +418,11 @@
         font-size: 13px;
         padding: 8px;
         border-bottom: 1.5px solid var(--fg);
-        background: var(--bg);
+        /* #colhead used to live inside #topbar and inherit its dark
+           background via --header-bg; now that it's a normal element
+           below the (shorter) sticky header, this just resolves to the
+           page's own var(--bg), which is what we want. */
+        background: var(--header-bg, var(--bg));
       }
 
       .row {
@@ -314,6 +457,9 @@
         grid-column: 1;
         align-self: start;
         white-space: pre-wrap;
+        font-family: "Open Sans", sans-serif;
+        font-weight: 400;
+        font-size: 15px;
       }
       .detail .desc a {
         color: var(--muted);
@@ -340,7 +486,14 @@
         object-fit: cover;
         background: var(--hover);
         display: block;
-        cursor: crosshair;
+        cursor: pointer;
+      }
+      /* Wraps videos appended in .imgs (see buildImages() in the script
+         below) so the play badge above can anchor to something — .imgs'
+         other children are bare <img> tags with no wrapper of their own. */
+      .video-wrap {
+        position: relative;
+        flex: 0 0 auto;
       }
       .empty {
         color: var(--muted);
@@ -349,18 +502,16 @@
       .decor {
         text-align:center;
         font-weight: 600px;
-        padding: 2px;
-        border-bottom: 1.5px solid var(--fg);
+        padding: 16px 2px 2px;
+        border-top: 1.5px solid var(--fg);
       }
 
       #theme-toggle {
-        position: fixed;
-        top: 14px;
-        right: 14px;
-        z-index: 30;
+        margin-left: auto;
+        align-self: center;
         background: none;
         border: none;
-        color: var(--fg);
+        color: #ffffff;
         cursor: pointer;
         padding: 4px;
       }
@@ -446,53 +597,218 @@
         #thumb {
           max-width: 55vw;
         }
+        .nav button,
+        .nav a {
+          font-size: 11px;
+        }
+        /* Mail is a desktop-only affordance on mobile; the theme toggle
+           takes over its spot bottom-left instead, freeing up the header
+           row (it's pulled out of nav's flex flow via position: fixed). */
+        #contact-fab,
+        #contact-popup {
+          display: none !important;
+        }
+        #theme-toggle {
+          position: fixed;
+          left: 20px;
+          bottom: 20px;
+          width: 48px;
+          height: 48px;
+          margin-left: 0;
+          border-radius: 50%;
+          background: #192833;
+          color: #ffffff;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+          z-index: 40;
+        }
+        #theme-toggle svg {
+          width: 20px;
+          height: 20px;
+        }
+        :root[data-theme="dark"] #theme-toggle {
+          background: #ffffff;
+          color: #192833;
+        }
+        #branding-note,
+        #list-note {
+          font-size: 12px;
+        }
+        #branding-note {
+          max-width: 100%;
+        }
       }
       @media (prefers-reduced-motion: reduce) {
         * {
           transition: none !important;
         }
       }
+
+      /* Custom scrollbar */
+      * {
+        scrollbar-color: #436C89 transparent;
+        scrollbar-width: thin;
+      }
+      ::-webkit-scrollbar {
+        width: 10px;
+        height: 10px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background-color: #436C89;
+        border-radius: 6px;
+        border: 2px solid var(--bg);
+      }
+
+      /* Contact FAB + popup form. The FAB is explicitly #192833/white
+         (and swapped in dark mode) per request, rather than tokenized —
+         everything else here reuses the site's existing var(--bg)/
+         var(--fg)/var(--line) tokens so it already follows dark mode. */
+      #contact-fab {
+        position: fixed;
+        left: 20px;
+        bottom: 20px;
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: #192833;
+        border: none;
+        color: #ffffff;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 40;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        transition: transform 0.15s ease, background-color 0.3s ease, color 0.3s ease;
+      }
+      #contact-fab:hover {
+        transform: scale(1.06);
+      }
+      #contact-fab svg {
+        width: 20px;
+        height: 20px;
+        stroke: currentColor;
+        stroke-width: 1.6;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        fill: none;
+      }
+      :root[data-theme="dark"] #contact-fab {
+        background: #ffffff;
+        color: #192833;
+      }
+      #contact-popup {
+        position: fixed;
+        left: 20px;
+        bottom: 80px;
+        width: 240px;
+        max-width: calc(100vw - 40px);
+        background: var(--bg);
+        border: 1px solid var(--fg);
+        padding: 16px;
+        z-index: 41;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+      }
+      #contact-popup[hidden] {
+        display: none;
+      }
+      #contact-popup h3 {
+        font-size: 13px;
+        font-weight: 600;
+        margin: 0 20px 12px 0;
+      }
+      #contact-popup label {
+        display: block;
+        font-size: 11px;
+        color: var(--muted);
+        margin-bottom: 10px;
+      }
+      #contact-popup input,
+      #contact-popup textarea {
+        display: block;
+        width: 100%;
+        margin-top: 4px;
+        font: inherit;
+        font-size: 12px;
+        padding: 6px;
+        background: var(--hover);
+        border: 1px solid var(--line);
+        color: var(--fg);
+        resize: vertical;
+      }
+      #contact-close {
+        position: absolute;
+        top: 6px;
+        right: 8px;
+        background: none;
+        border: none;
+        color: var(--fg);
+        cursor: pointer;
+        font-size: 18px;
+        line-height: 1;
+        padding: 4px;
+      }
+      #contact-form button[type="submit"] {
+        margin-top: 4px;
+        background: var(--fg);
+        color: var(--bg);
+        border: none;
+        padding: 6px 14px;
+        cursor: pointer;
+        font: inherit;
+        font-size: 12px;
+      }
     </style>
   </head>
   <body>
-    <button id="theme-toggle" type="button" aria-label="Toggle dark mode">
-      <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true">
-        <circle cx="12" cy="12" r="4"></circle>
-        <line x1="12" y1="2" x2="12" y2="4"></line>
-        <line x1="12" y1="20" x2="12" y2="22"></line>
-        <line x1="4.93" y1="4.93" x2="6.34" y2="6.34"></line>
-        <line x1="17.66" y1="17.66" x2="19.07" y2="19.07"></line>
-        <line x1="2" y1="12" x2="4" y2="12"></line>
-        <line x1="20" y1="12" x2="22" y2="12"></line>
-        <line x1="4.93" y1="19.07" x2="6.34" y2="17.66"></line>
-        <line x1="17.66" y1="6.34" x2="19.07" y2="4.93"></line>
-      </svg>
-      <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-      </svg>
-    </button>
-
     <div id="topbar">
       <nav class="nav">
         <a href="index.html">Homepage</a>
-        <button id="btn-branding" type="button" class="active">Identity &amp; Graphic Design</button>
+        <button id="btn-branding" type="button" class="active">Identity Design</button>
         <button id="btn-illustration" type="button">Illustration &amp; Concepts</button>
+        <button id="theme-toggle" type="button" aria-label="Toggle dark mode">
+          <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="4"></circle>
+            <line x1="12" y1="2" x2="12" y2="4"></line>
+            <line x1="12" y1="20" x2="12" y2="22"></line>
+            <line x1="4.93" y1="4.93" x2="6.34" y2="6.34"></line>
+            <line x1="17.66" y1="17.66" x2="19.07" y2="19.07"></line>
+            <line x1="2" y1="12" x2="4" y2="12"></line>
+            <line x1="20" y1="12" x2="22" y2="12"></line>
+            <line x1="4.93" y1="19.07" x2="6.34" y2="17.66"></line>
+            <line x1="17.66" y1="6.34" x2="19.07" y2="4.93"></line>
+          </svg>
+          <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
       </nav>
       <div id="branding-note">Centering on brand identity and graphic design, this page covers logo and visual identity systems, print-based work like letterpress and cyanotype, and front-end web development in the form of freelance projects, coursework, and hands-on instruction.</div>
-      <div id="list-note">A place for sketches, narrative pieces, and speculative design. Exploring numerous artistic fields under the graphic design umbrella: illustration, sculpture, photography, typography, and more.</div>
-      <div class="head" id="colhead">
-        <span>Project</span>
-        <span>Practice</span>
-        <span>Year</span>
-      </div>
+      <div id="list-note">Exploring numerous artistic fields under the graphic design umbrella: illustration, sculpture, photography, typography, sketches,  speculative design, and more</div>
+    </div>
+
+    <div class="head" id="colhead">
+      <span>Project</span>
+      <span>Practice</span>
+      <span>Year</span>
     </div>
 
     <div id="branding">
       <!-- Duplicate a block like this per project once real content is ready -->
       <section>
-        <h2>Lead Front-End Web Developer for OSC</h2>
         <div class="project-body">
-          <p>Open Source Climbing (OSC) is a free training resource app built for college climbing teams. I designed and built a complete visual asset library for the platform — including a color palette, logo, custom emoji set, buttons, and input components — along with a site-wide dark mode toggle. Working closely with the back-end team, I maintained clear, consistent communication to meet deadlines and project goals. Built with HTML, CSS, and JavaScript, with hands-on experience picking up React along the way. The project is ongoing and live at opensourceclimbing.com.</p>
+          <div class="desc">
+            <h2>Lead Front-End Web Developer for OSC</h2>
+            <p>Open Source Climbing (OSC) is a free training resource app built for college climbing teams. I designed and built a complete visual asset library for the platform, including a color palette, logo, custom emoji set, buttons, and input components, along with a site-wide dark mode toggle for accessibility. The site's functioning dark mode and light mode version automatically aligns with each user's set preferences. These image previews mostly show light mode, aside from image 3, since that was how the site was most commonly viewed.</p>  
+            <p>I worked closely with the back-end team, editing within a branch and pulling changes to ensure a clean work environment. I maintained clear communication and held online meetings regularly to discuss deadlines and create timelines to meet project goals consistently. The site was built with HTML, CSS, and JavaScript, and gave me hands-on experience picking up React along the way. The project launched live at <a href="https://opensourceclimbing.com" target="_blank" rel="noopener noreferrer">opensourceclimbing.com</a>.</p>
+            <p>The site is not only a functional tool, but also a platform for user engagement. Built for climbing teams, OSC is specifically designed to enhance the climbing experience with interactive features and engaging content, with the monkey motif leaving easter eggs throughout. One small detail worth noting was the motivational monkey quotes on the journal page, accessed by clicking the banana icon, added as a playful touch for user engagement. Hand drawn illustrations and animations were used to create a unique visual identity for the platform, over 20 hours of design and development time on animation alone was spent. The site was designed with a minimalist approach in order to let the functions of the site stand out. The workout library specifically is a visually busy page and needed to be kept easy to navigate.</p>
+            
+          </div>
           <div class="carousel-stack">
             <div class="carousel">
               <div class="carousel-track">
@@ -561,12 +877,12 @@
       </section>
 
       <section>
-        <h2>Instruction at Studio Two Three</h2>
         <div class="project-body">
           <div class="desc">
-            <p>At Studio Two Three, I teach Letterpress instruction covering type nomenclature, composing type, press operation, and press cleaning and setup. The studio's traditional print shop houses several vintage presses donated by museums and private collectors, including the Showcard proof press, the Nolan proof press, and the Challenge 15KA proof press. Sessions cover the fundamentals of printing with both metal and wood type, along with a guided tour of the studio's extensive, century-old type collection that I've personally organized, cleaned, and catalogued. Students leave with their own prints, dried on a convection dryer. These classes typically run in groups of 3–5, though I also teach one-on-one sessions.</p>
-            <p>I also lead a more approachable beginner class exploring the art of Letterpress using flat LEGO pieces: students compose their own artworks while I demonstrate the studio's various presses, offering a low-pressure introduction to analog printing. These workshops usually run in groups of 5 or more.</p>
-            <p>My Cyanotype instruction explores printing with natural materials, using photographic images from film or transparencies. I teach both natural UV sunlight exposure and the studio's indoor exposure unit for cloudy days, in classes of up to 15 students. Cyanotype printing is one of my creative passions, and I'm drawn to working with natural materials within artistic practice. I've recently begun experimenting with chlorotype printing and look forward to exploring it further.</p>
+            <h2>Instruction at Studio Two Three</h2>
+            <p>At Studio Two Three, a 501c3 nonprofit community arts space that supports art making for personal & social change, I taught multiple classes. I enjoyed making flyers for upcoming classes that embodied what I was teaching. My hope is to inspire others to try something new and explore the world of analog printing. In Letterpress 101 I covered type nomenclature, composing type, and press operation. The studio's traditional print shop houses several vintage presses donated by museums and private collectors. Letterpress workshops would begin with a guided tour of the studio's extensive century old wood and metal type collection, one that I've personally cleaned and catalogued. These classes typically ran in groups of three to five, though I also taught one-on-one sessions.</p>
+            <p>I also led a more approachable beginner class that offered a low pressure introduction to analog printing using flat LEGO pieces. Students composed their own artworks while I demonstrated the studio's various presses and how to prepare paper and compositions for printing. </p>
+            <p>My Cyanotype instruction explored printing with natural materials, using foraged natural materials, photographic images from film or transparencies, or truly unique items like a glass fish bottle. Workshops would sometimes be indoors depending on weather, if conditions weren't optimal for natural UV sunlight exposure, the studio's indoor exposure unit would save the day. These classes could be up to fifteen students. Cyanotype printing is one of my creative passions and I love to share that. I was drawn to working with natural materials within artistic practice and recently I've experimented with chlorotype printing with a friend and hope to explore it further.</p>
           </div>
           <div class="carousel">
             <div class="carousel-track">
@@ -594,20 +910,25 @@
       </section>
 
       <section>
-        <h2>Branding Examples</h2>
         <div class="project-body">
-          <p>A collection of freelance and passion-project branding work, including logo design for the local band Zen-X, menu design for Kokee Tea (a tea shop I worked at), and an illustrated logo and brand identity for Neuro at VCU Club. Additional projects explore typeface identity and business vision boards, each focused on capturing the feel and message behind the product or organization.</p>
+          <div class="desc">
+            <h2>Branding Samples</h2>
+            <p>This is a collection of freelance and passion project branding work. It includes logo design for the local band Zen-X, menu design for Kokee Tea, a tea shop I worked at, and an illustrated logo and brand identity for the Neuro at VCU Club. Each project begins with research into the client's voice and audience, identifying their vision. I love the challenge of unearthing a client's true wishes when sometimes they aren't even sure of what they want. I like to help them find their way through sketching concepts, exploring different typefaces, and testing color palettes before finally arriving at an identity that resonates with them.</p>
+            <p>Additional projects explored typeface identity and business vision boards, each focused on capturing the feel and message behind the hypothetical product or organization. Across this work, I focused on building identities that felt consistent in the little details. Keeping an eye out for inconsistencies so that each brand felt cohesive across everywhere it appeared.</p>
+            
+          </div>
           <div class="carousel">
             <div class="carousel-track">
               <div class="carousel-slides">
-                <div class="carousel-slide"> <img src="https://i.postimg.cc/3rBs4WKr/2-font.png" alt="Project title 3"> </div>
                 <div class="carousel-slide"> <img src="https://i.postimg.cc/tR5KZ7Xn/3-font.png" alt="Project title 3"> </div>
+                <div class="carousel-slide"> <img src="https://i.postimg.cc/VvDp3Z77/1-font.png" alt="Project title 3"> </div>
+                <div class="carousel-slide"> <img src="https://i.postimg.cc/3rBs4WKr/2-font.png" alt="Project title 3"> </div>
+                <div class="carousel-slide"> <img src="https://i.postimg.cc/BZMzZyg7/Kokee-Tea-Hot-Tea2.jpg" alt="Project title 3"> </div>
                 <div class="carousel-slide"> <img src="https://i.postimg.cc/hPtH9gj9/5-branding.png" alt="Project title 3"> </div>
                 <div class="carousel-slide"> <img src="https://i.postimg.cc/kXgkx94j/6-branding.png" alt="Project title 3"> </div>
                 <div class="carousel-slide"> <img src="https://i.postimg.cc/bNwKQ8rX/7-branding.png" alt="Project title 3"> </div>
-                <div class="carousel-slide"> <img src="https://i.postimg.cc/YC20gJWR/Neuro.png" alt="Project title 3"> </div>
-                <div class="carousel-slide"> <img src="https://i.postimg.cc/BZMzZyg7/Kokee-Tea-Hot-Tea2.jpg" alt="Project title 3"> </div>
                 <div class="carousel-slide"> <img src="https://i.postimg.cc/sDHbm8Q8/8-bandlogo.jpg" alt="Project title 3"> </div>
+                <div class="carousel-slide"> <img src="https://i.postimg.cc/YC20gJWR/Neuro.png" alt="Project title 3"> </div>
               </div>
             </div>
             <button class="carousel-prev" type="button" aria-label="Previous image">&larr;</button>
@@ -619,9 +940,13 @@
       </section>
 
         <section>
-        <h2>Poster & Zine Archive</h2>
         <div class="project-body">
-          <p>Assorted posters and zines made over several years following various interests at the time or assignments for class. Many of these posters are designed to live digitally and that reflects in their style and colors, some of them being moving posters that have elements of them being animated. These posters and zines were created in artistic spaces that value controlled chaos and creativity.</p>
+          <div class="desc">
+            <h2>Poster & Zine Archive</h2>
+            <p>This archive gathered assorted posters and zines made over several years, following personal interests at the time or specific class assignments. Many of these posters were designed to live digitally, the first two videos here are moving posters.  and that intent shaped their style and color choices. Some included moving elements and were built with simple animation in mind. These pieces were created in artistic spaces that valued controlled chaos and creativity over strict polish.</p>
+            <p>Working across posters and zines let me experiment freely with layout, type, and color in ways that felt looser than client based work. Some pieces leaned into collage and found imagery, while others were built entirely from original illustration and hand lettering. The collage piece on slide nine is made entirely out of thrifted scrap material from well known source SCRAP RVA. The dates on some of these old magazines were from nearly a hundred years ago. I love to work with existing material and rework pieces. Though I keep skills and lessons I've learned from past projects in mind, I like to start each project anew and try to figure out a different way to express myself creatively.  </p>
+            
+          </div>
           <div class="carousel">
             <div class="carousel-track">
               <div class="carousel-slides">
@@ -665,9 +990,36 @@
       <video id="lightbox-video" controls muted playsinline></video>
     </div>
 
-    <br>
     <div class="decor">
     <p>Contact | 703-403-2901 | Work@kohlio.studio</p>
+    </div>
+
+    <button id="contact-fab" type="button" aria-label="Open contact form" aria-haspopup="dialog" aria-expanded="false">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M3 5h18v14H3z"></path>
+        <path d="M3 6l9 7 9-7"></path>
+      </svg>
+    </button>
+
+    <div id="contact-popup" role="dialog" aria-modal="true" aria-labelledby="contact-popup-title" hidden>
+      <button id="contact-close" type="button" aria-label="Close contact form">&times;</button>
+      <h3 id="contact-popup-title">How's the site?</h3>
+      <form id="contact-form">
+        <input type="hidden" name="access_key" value="340ecd72-ea69-429d-b0b7-7ea2776f8d5a" />
+        <input type="hidden" name="subject" value="How's the site? — new message from kohlio.studio" />
+        <input type="text" name="botcheck" style="display:none" tabindex="-1" autocomplete="off" />
+        <label>Name
+          <input type="text" name="name" required />
+        </label>
+        <label>Email
+          <input type="email" name="email" required />
+        </label>
+        <label>Message
+          <textarea name="message" rows="4" required></textarea>
+        </label>
+        <button type="submit">Send</button>
+        <p id="contact-status" role="status" aria-live="polite"></p>
+      </form>
     </div>
 
     <script>
@@ -697,6 +1049,68 @@
         try {
           localStorage.setItem(THEME_KEY, next);
         } catch (e) {}
+      });
+
+      // Contact FAB + popup. This static site has no backend of its own,
+      // so submissions are handed to Web3Forms, which emails them to
+      // Work@kohlio.studio without ever leaving the page.
+      const contactFab = document.getElementById("contact-fab");
+      const contactPopup = document.getElementById("contact-popup");
+      const contactClose = document.getElementById("contact-close");
+      const contactForm = document.getElementById("contact-form");
+      const contactStatus = document.getElementById("contact-status");
+      const contactSubmitBtn = contactForm.querySelector('button[type="submit"]');
+
+      function openContactPopup() {
+        contactPopup.hidden = false;
+        contactFab.setAttribute("aria-expanded", "true");
+      }
+      function closeContactPopup() {
+        contactPopup.hidden = true;
+        contactFab.setAttribute("aria-expanded", "false");
+      }
+      contactFab.addEventListener("click", function () {
+        if (contactPopup.hidden) {
+          openContactPopup();
+        } else {
+          closeContactPopup();
+        }
+      });
+      contactClose.addEventListener("click", closeContactPopup);
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape" && !contactPopup.hidden) closeContactPopup();
+      });
+      contactForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+        contactSubmitBtn.disabled = true;
+        contactStatus.textContent = "Sending…";
+        contactStatus.className = "";
+
+        fetch("https://api.web3forms.com/submit", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Accept: "application/json" },
+          body: JSON.stringify(Object.fromEntries(new FormData(contactForm))),
+        })
+          .then(function (res) {
+            return res.json();
+          })
+          .then(function (data) {
+            if (data.success) {
+              contactStatus.textContent = "Message sent — thank you!";
+              contactStatus.className = "success";
+              contactForm.reset();
+            } else {
+              throw new Error(data.message || "Something went wrong.");
+            }
+          })
+          .catch(function () {
+            contactStatus.textContent =
+              "Couldn't send that. Please email Work@kohlio.studio directly.";
+            contactStatus.className = "error";
+          })
+          .finally(function () {
+            contactSubmitBtn.disabled = false;
+          });
       });
 
       /* =========================================================
@@ -877,7 +1291,10 @@
                 vid.addEventListener("click", function () {
                   openLightbox({ src: item.src, type: "video", alt: project });
                 });
-                imgsWrap.appendChild(vid);
+                const vidWrap = document.createElement("div");
+                vidWrap.className = "video-wrap";
+                vidWrap.appendChild(vid);
+                imgsWrap.appendChild(vidWrap);
               } else {
                 const im = document.createElement("img");
                 im.loading = "lazy";
