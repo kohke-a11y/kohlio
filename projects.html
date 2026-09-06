@@ -236,7 +236,7 @@
         gap: 16px;
         max-width: 460px;
       }
-      @media (min-width: 641px) {
+      @media (min-width: 801px) {
         .project-body {
           flex-direction: row;
           align-items: flex-start;
@@ -245,6 +245,7 @@
         .project-body > .desc {
           flex: 1;
           max-width: 480px;
+          min-width: 0;
         }
         .project-body > .desc p:last-child {
           margin-bottom: 0;
@@ -252,6 +253,14 @@
         .project-body > .carousel,
         .project-body > .carousel-stack {
           flex: 1 1 460px;
+          /* Without this, flex items default to min-width: auto, which
+             means their intrinsic content size (here, the carousel's own
+             460px max-width, read as a minimum during Chrome's intrinsic
+             sizing pass) becomes a hard floor — the carousel refuses to
+             shrink below 460px even when there isn't room for it plus
+             .desc, forcing the row wider than the viewport. This is the
+             standard fix for that flexbox behavior. */
+          min-width: 0;
         }
       }
       .carousel {
@@ -295,9 +304,22 @@
         height: 46px;
         transform: translate(-50%, -50%);
         border-radius: 50%;
-        background: rgba(255, 255, 255, 0.22);
-        backdrop-filter: blur(8px) saturate(140%);
-        -webkit-backdrop-filter: blur(8px) saturate(140%);
+        background: radial-gradient(
+          circle closest-side,
+          rgba(255, 255, 255, 0) 40%,
+          rgba(255, 255, 255, 0.4) 100%
+        );
+        backdrop-filter: blur(11px) saturate(140%);
+        -webkit-backdrop-filter: blur(11px) saturate(140%);
+        /* The gradient above only fades the white tint — backdrop-filter's
+           blur still applied evenly across the whole circle, leaving the
+           center hazy. Masking the element fades the blur itself too, so
+           the center is genuinely clear and only the rim reads as frosted.
+           closest-side (not the default farthest-corner) lines the 100%
+           stop up with the circle's own edge, where the border sits,
+           instead of the square box's corner. */
+        mask-image: radial-gradient(circle closest-side, transparent 40%, black 100%);
+        -webkit-mask-image: radial-gradient(circle closest-side, transparent 40%, black 100%);
         border: 1px solid rgba(255, 255, 255, 0.45);
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
         pointer-events: none;
@@ -575,7 +597,20 @@
         object-fit: contain;
       }
 
-      @media (max-width: 640px) {
+      @media (max-width: 800px) {
+        /* Belt-and-suspenders against a horizontal scrollbar/white gutter
+           on narrow screens: the grid/flex columns above use fr units
+           alongside a fixed gap, and at certain viewport widths that math
+           rounds a fraction of a pixel past 100% (hence it only shows up
+           at some widths, not others, when slowly resizing). Rather than
+           chase the exact rounding width, clip it outright — nothing on
+           this page relies on horizontal scroll at the page level. */
+        html {
+          overflow-x: hidden;
+        }
+        .nav {
+          justify-content: space-between;
+        }
         .head,
         .row {
           grid-template-columns: 1.6fr 1fr 0.5fr;
