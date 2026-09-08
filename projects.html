@@ -288,6 +288,35 @@
         flex: 0 0 100%;
         background: var(--hover);
       }
+      /* Spinner shown over a slide whose image hasn't arrived yet. JS adds
+         .ready once the media fires its load event, which removes the
+         spinner. Only unloaded slides animate, so this costs nothing once
+         the images are in. */
+      .carousel-slide.is-current:not(.ready)::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 22px;
+        height: 22px;
+        margin: -11px 0 0 -11px;
+        border: 2px solid var(--line);
+        border-top-color: var(--fg);
+        border-radius: 50%;
+        animation: carousel-spin 1.4s linear infinite;
+      }
+      @keyframes carousel-spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .carousel-slide.is-current:not(.ready)::after {
+          animation: none;
+          border-top-color: var(--line);
+          opacity: 0.6;
+        }
+      }
       .carousel-slide img,
       .carousel-slide video {
         width: 100%;
@@ -1455,6 +1484,11 @@
           thumbs.forEach(function (t, i) {
             t.classList.toggle("active", i === index);
           });
+          // Only the visible slide carries the spinner, so off-screen
+          // slides never run the animation.
+          slides.forEach(function (s, i) {
+            s.classList.toggle("is-current", i === index);
+          });
           if (counterEl) {
             counterEl.textContent = slides.length ? index + 1 + " / " + slides.length : "";
           }
@@ -1535,12 +1569,18 @@
           const ready = isVideoMedia ? media.readyState >= 1 : media.complete;
           const readyEvent = isVideoMedia ? "loadedmetadata" : "load";
           if (ready) {
+            slide.classList.add("ready");
             if (slides[index] === slide) resizeToSlide();
             if (i === 0) positionArrows();
           } else {
             media.addEventListener(readyEvent, function () {
+              slide.classList.add("ready");
               if (slides[index] === slide) resizeToSlide();
               if (i === 0) positionArrows();
+            });
+            // A broken/blocked image should stop spinning too.
+            media.addEventListener("error", function () {
+              slide.classList.add("ready");
             });
           }
           if (media.getAttribute("src")) {
