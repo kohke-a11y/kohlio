@@ -15,7 +15,7 @@
       fetchpriority="high"
     />
     <link
-      href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&family=Source+Code+Pro:wght@400;500&display=swap"
       rel="stylesheet"
     />
     <style>
@@ -51,6 +51,16 @@
         padding: 24px;
         -webkit-font-smoothing: antialiased;
       }
+      #page-frame {
+        border-style: solid;
+        border-color: transparent;
+        border-width: 0 28px;
+        border-image-slice: 14;
+        border-image-width: 0 28px;
+        border-image-repeat: round;
+        border-image-source: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACoAAAAqCAYAAADFw8lbAAABS0lEQVR42mN0zun8zzAEABOMsbo1m2F1azYDsXx662OCCaIbgo09kHJMDEMEsDAwMDCEVk8lqBCbGnrqY8EW5KHVUxkuztvPwMDAwKCf5IghhyvaaKmP0Tmn8z96ulCTDGGY+fcgAwMDA0M6sz3DredrsPqWnvpwptHvzOQlX1rpY8IWLfpJjgwFDLYM6cz2DPpJjjjTDj31MWIr8NGjhpjET2t9LNgSNiHDsKU1WusbMuUo1jSKLz0NlBzjUGmUsJCrce+UckZy9JEbMBS3nsgFdG09UeLI0dYTsYU3MWBAWk/UiH6i7HPO6fz/7uMXFCzC5fF/LTvn/7XsnP9FuDww5Ckp0si1j+qtJ3IBTVtP1EqjNG09UbPAp3nriVoZabT1RO00StPWE70bJYyjY0+jY0+jY0+jY0+jY0+jY0+jY0+jrafRsScSAABeKjSBYm93LgAAAABJRU5ErkJggg==");
+        image-rendering: pixelated;
+      }
 
       #topbar {
         position: sticky;
@@ -65,47 +75,25 @@
         transition: background-color 0.3s ease, border-color 0.3s ease;
         z-index: 20;
       }
-      /* Subtle fade where the page content scrolls in under the sticky
-         header, rather than an abrupt cut. Anchored to #topbar itself (not
-         a separate fixed element) so it always sits exactly at the
-         header's bottom edge regardless of how tall the header currently
-         is, and scrolls with it. It only overlays the page below — the
-         header's own background/content is untouched. Uses the page's own
-         background (--bg), not the header's, so it blends with the page
-         content rather than the header color. Branding & Design only —
-         Illustration & Concepts doesn't get this fade.
-         top is 100% + 4px (not just 100%) because 100% lands at the inner
-         edge of #topbar's 4px border — right at that edge, the fade's own
-         opaque starting color was painting directly over the border and
-         hiding it. The +4px clears the border so it stays visible. */
-      body:not(.view-list) #topbar::after {
-        content: "";
-        position: absolute;
-        left: 0;
-        right: 0;
-        top: calc(100% + 4px);
-        height: 50px;
-        pointer-events: none;
-        background: linear-gradient(to bottom, var(--bg), transparent);
-      }
       /* Header color scheme, identical across both views (Identity and
          Illustration): a dark navy header with white active-tab/intro
          text in light mode, and a #436C89 header with dark #192833
          active-tab/intro text plus white inactive-nav text in dark mode
          (an intentional inversion, not a mistake — --fg literally flips
          from the brightest color to the darkest). --header-desc-border
-         (same #DDE7EE in both themes) drives #topbar's own bottom border
-         (below), so it spans the full page width rather than being
-         limited to #branding-note's/#list-note's own (narrower) box. */
+         (the same cream used in the page border tile, in both themes)
+         drives #topbar's own bottom border (below), so it spans the full
+         page width rather than being limited to #branding-note's/
+         #list-note's own (narrower) box. */
       html:not([data-theme="dark"]) #topbar {
         --header-bg: #1C3244;
         --fg: #ffffff;
-        --header-desc-border: #DDE7EE;
+        --header-desc-border: #EEF1F4;
       }
       html[data-theme="dark"] #topbar {
         --header-bg: #436C89;
         --fg: #192833;
-        --header-desc-border: #223644;
+        --header-desc-border: #EEF1F4;
       }
       .nav {
         display: flex;
@@ -181,8 +169,9 @@
       #branding-note {
         padding: 4px 8px 12px;
         color: var(--fg);
-        font-family: "Open Sans", sans-serif;
-        font-weight: 300;
+        font-family: "Source Code Pro", "SF Mono", ui-monospace, monospace;
+        font-weight: 500;
+        line-height: 1.35;
       }
       #branding-note {
         max-width: 75%;
@@ -193,7 +182,6 @@
       html[data-theme="dark"] #list-note,
       html[data-theme="dark"] #branding-note {
         color: #98B7CD;
-        font-weight: 400;
       }
 
       #branding {
@@ -216,9 +204,10 @@
         margin-bottom: 8px;
       }
       .project-body p {
-        font-family: "Open Sans", sans-serif;
-        font-weight: 600;
-        font-size: 15px;
+        font-family: "Source Code Pro", "SF Mono", ui-monospace, monospace;
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 1.35;
       }
       .project-body p a {
         color: var(--muted);
@@ -227,11 +216,55 @@
       .project-body p a:hover {
         color: var(--fg);
       }
-      #branding section:first-child {
-        margin-top: 32px;
+      #branding .desc {
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 18px 22px;
       }
-      #branding section + section {
-        margin-top: 96px;
+      .project-panel:first-child {
+        margin-top: 64px;
+      }
+      .project-panel + .project-panel {
+        margin-top: 56px;
+      }
+      .hero-panel + .project-panel {
+        margin-top: 16px;
+      }
+      .intro-panel + .project-panel {
+        margin-top: 48px;
+      }
+      .project-panel {
+        position: relative;
+      }
+      .project-panel-inner {
+        width: 100%;
+      }
+      .hero-media {
+        height: 70vh;
+        max-height: 100%;
+        background: var(--hover);
+        overflow: hidden;
+        border-radius: 16px;
+      }
+      .hero-media video,
+      .hero-media img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+      .media-placeholder {
+        height: 320px;
+        max-height: 100%;
+        max-width: 460px;
+        background: var(--hover);
+        border: 1px dashed var(--line);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--muted);
+        text-align: center;
+        padding: 24px;
       }
       .project-body {
         display: flex;
@@ -259,7 +292,8 @@
           margin-bottom: 0;
         }
         .project-body > .carousel,
-        .project-body > .carousel-stack {
+        .project-body > .carousel-stack,
+        .project-body > .media-placeholder {
           flex: 1 1 460px;
           /* Without this, flex items default to min-width: auto, which
              means their intrinsic content size (here, the carousel's own
@@ -269,6 +303,52 @@
              .desc, forcing the row wider than the viewport. This is the
              standard fix for that flexbox behavior. */
           min-width: 0;
+        }
+        .project-body.stacked {
+          flex-direction: column;
+          align-items: stretch;
+        }
+        .project-body.stacked > .desc {
+          max-width: none;
+          width: 100%;
+        }
+
+        /* One-project-per-screen rotate-out exit effect, desktop only. No
+           scroll-snap — the page scrolls completely freely, and --exit (set
+           continuously by the scroll listener further down, 0 to 1) drives
+           the transform/opacity directly, so the effect can be left sitting
+           at any half-finished point instead of being forced to complete. */
+        .project-panel {
+          margin-top: 0;
+        }
+        .project-panel:first-child {
+          margin-top: 40px;
+        }
+        .project-panel + .project-panel {
+          margin-top: 6vh;
+        }
+        .hero-panel + .project-panel {
+          margin-top: 16px;
+        }
+        .intro-panel + .project-panel {
+          margin-top: 5vh;
+        }
+        .project-panel {
+          min-height: calc(100vh - var(--header-h, 160px));
+          display: flex;
+          align-items: center;
+        }
+        .hero-panel,
+        .intro-panel {
+          min-height: 0;
+          display: block;
+        }
+        .project-panel-inner {
+          max-height: 100%;
+          overflow-y: auto;
+          transform: translate(calc(var(--exit, 0) * -65vw), calc(var(--exit, 0) * -16vh))
+            rotate(calc(var(--exit, 0) * -16deg));
+          opacity: calc(1 - var(--exit, 0));
         }
       }
       .carousel {
@@ -462,6 +542,62 @@
         font-size: 12px;
       }
 
+      .poster-layout {
+        display: flex;
+        gap: 16px;
+        align-items: stretch;
+        width: 100%;
+      }
+      .image-grid {
+        flex: 3;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: repeat(4, 1fr);
+        gap: 10px;
+      }
+      .video-pair {
+        flex: 2;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        order: -1;
+      }
+      .video-pair .grid-item {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .video-pair .grid-item video {
+        max-width: 100%;
+        max-height: 100%;
+        width: auto;
+        height: auto;
+        object-fit: contain;
+      }
+      .grid-item {
+        position: relative;
+        overflow: hidden;
+        background: var(--hover);
+        transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+      }
+      .image-grid .grid-item {
+        aspect-ratio: 3 / 4;
+      }
+      .grid-item img,
+      .grid-item video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        cursor: pointer;
+        display: block;
+      }
+      .grid-item:hover {
+        transform: scale(1.08);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+        z-index: 2;
+      }
+
       .head,
       .row {
         display: grid;
@@ -516,9 +652,10 @@
         grid-column: 1;
         align-self: start;
         white-space: pre-wrap;
-        font-family: "Open Sans", sans-serif;
-        font-weight: 400;
-        font-size: 15px;
+        font-family: "Source Code Pro", "SF Mono", ui-monospace, monospace;
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 1.35;
       }
       .detail .desc a {
         color: var(--muted);
@@ -665,6 +802,13 @@
         .detail img,
         .detail video {
           height: 140px;
+        }
+        .poster-layout {
+          flex-direction: column;
+        }
+        .image-grid {
+          grid-template-columns: repeat(2, 1fr);
+          grid-template-rows: repeat(6, 1fr);
         }
         #thumb {
           max-width: 55vw;
@@ -864,6 +1008,7 @@
       <div id="list-note">Exploring numerous artistic fields under the graphic design umbrella: illustration, sculpture, photography, typography, sketches,  speculative design, and more</div>
     </div>
 
+    <div id="page-frame">
     <div class="head" id="colhead">
       <span>Project</span>
       <span>Practice</span>
@@ -871,14 +1016,68 @@
     </div>
 
     <div id="branding">
+      <div class="project-panel hero-panel" data-panel>
+        <div class="project-panel-inner">
+          <div class="hero-media">
+            <video src="https://res.cloudinary.com/vm72268t/video/upload/v1790784259/Untitled.mov" autoplay muted loop playsinline></video>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="project-panel intro-panel" data-panel>
+      <div class="project-panel-inner">
+      <section>
+        <div class="project-body stacked">
+          <div class="desc">
+            <h2>Current Focus: Content Creation for Hao Ru Restaurant</h2>
+            <p>An ongoing role focused on creating engaging content for Haoru's digital presence.</p>
+          </div>
+        </div>
+      </section>
+      </div>
+      </div>
+
       <!-- Duplicate a block like this per project once real content is ready -->
+      <div class="project-panel" data-panel>
+      <div class="project-panel-inner">
+      <section>
+        <div class="project-body">
+          <div class="desc">
+            <h2>Design Challenge, referencing the National Museum of Asian Art</h2>
+            <p>My goal was to design a visual identity for the museum's ongoing exhibitions, trying to make paper matter that fit as naturally as possible while putting in a personal touch. Using Adobe InDesign and Illustrator, I created special exhibit cards as well as a brochure that followed their current brand system that could be used to aid visitors of the museum. As someone who loves visiting the NMAA, I was excited to showcase the museum's cultural artifacts while adding my own favorite elements. Within these pages, I made sure to describe the reasoning behind my design choices and the process I went through to create them.</p>
+          </div>
+          <div class="carousel">
+            <div class="carousel-track">
+              <div class="carousel-slides">
+                 <div class="carousel-slide"> <img loading="lazy" decoding="async" src="https://i.postimg.cc/q7djXpGn/NMAA1.webp" alt="Project title 1"> </div>
+                  <div class="carousel-slide"><img loading="lazy" decoding="async" src="https://i.postimg.cc/cJNXMdcQ/NMAA2.webp" alt="Project title 1"> </div>
+                  <div class="carousel-slide"> <img loading="lazy" decoding="async" src="https://i.postimg.cc/cJNXMdcQ/NMAA2.webp" alt="Project title 1"> </div>
+                  <div class="carousel-slide"> <img loading="lazy" decoding="async" src="https://i.postimg.cc/xdSty9Pv/NMAA4.webp" alt="Project title 1"> </div>
+                  <div class="carousel-slide"> <img loading="lazy" decoding="async" src="https://i.postimg.cc/wTpXGwNN/NMAA5.webp" alt="Project title 1"></div>
+                  <div class="carousel-slide"> <img loading="lazy" decoding="async" src="https://i.postimg.cc/m2yYf73t/NMAA6.webp" alt="Project title 1"></div>
+                  <div class="carousel-slide"><img loading="lazy" decoding="async" src="https://i.postimg.cc/SNh6vgMw/NMAA7.webp" alt="Project title 1"></div>
+              </div>
+            </div>
+            <button class="carousel-prev" type="button" aria-label="Previous image">&larr;</button>
+            <button class="carousel-next" type="button" aria-label="Next image">&rarr;</button>
+            <div class="carousel-thumbs"></div>
+            <div class="carousel-counter"></div>
+          </div>
+        </div>
+      </section>
+      </div>
+      </div>
+
+      <div class="project-panel" data-panel>
+      <div class="project-panel-inner">
       <section>
         <div class="project-body">
           <div class="desc">
             <h2>Lead Front-End Web Developer for OSC</h2>
-            <p>Open Source Climbing (OSC) is a free training resource app built for college climbing teams. I designed and built a complete visual asset library for the platform, including a color palette, logo, custom emoji set, buttons, and input components, along with a site-wide dark mode toggle for accessibility. The site's functioning dark mode and light mode version automatically aligns with each user's set preferences. These image previews mostly show light mode, aside from image 3, since that was how the site was most commonly viewed.</p>  
-            <p>I worked closely with the back-end team, editing within a branch and pulling changes to ensure a clean work environment. I maintained clear communication and held online meetings regularly to discuss deadlines and create timelines to meet project goals consistently. The site was built with HTML, CSS, and JavaScript, and gave me hands-on experience picking up React along the way. The project launched live at <a href="https://opensourceclimbing.com" target="_blank" rel="noopener noreferrer">opensourceclimbing.com</a>.</p>
-            <p>The site is not only a functional tool, but also a platform for user engagement. Built for climbing teams, OSC is specifically designed to enhance the climbing experience with interactive features and engaging content, with the monkey motif leaving easter eggs throughout. One small detail worth noting was the motivational monkey quotes on the journal page, accessed by clicking the banana icon, added as a playful touch for user engagement. Hand drawn illustrations and animations were used to create a unique visual identity for the platform, over 20 hours of design and development time on animation alone was spent. The site was designed with a minimalist approach in order to let the functions of the site stand out. The workout library specifically is a visually busy page and needed to be kept easy to navigate.</p>
+            <p>Open Source Climbing (OSC) is a free training resource app built for college climbing teams. I designed and built a complete visual asset library for the platform, including a color palette, logo, custom emoji set, buttons, and input components, along with a site-wide dark mode toggle for accessibility. The site's functioning dark mode and light mode version automatically aligns with each user's set preferences. These image previews almost entirely comprise of light mode, as that was how the site was most popularly viewed.</p>  
+            <p>I worked closely with the back-end team, editing within a branch and pulling changes to ensure a clean work environment. We held online meetings regularly to discuss deadlines and create timelines to meet project goals consistently. The site was built with HTML, CSS, and JavaScript, and gave me hands-on experience picking up React along the way. The project launched live at <a href="https://opensourceclimbing.com" target="_blank" rel="noopener noreferrer">opensourceclimbing.com</a>.</p>
+            <p>Built for climbing teams, OSC is specifically designed to enhance the climber's experience with optimized training, interactive features, and engaging content. The monkey motif left easter eggs throughout, one small favorite detail of mine was the motivational monkey quotes on the journal page, a playful touch for user engagement. Hand drawn illustrations and animations were used to create a unique visual identity for the platform, over 30 hours of design and development time on animation alone was spent. The site was designed with a visually minimal approach in order to let the functions of the site be navigated easily.</p>
             
           </div>
           <div class="carousel-stack">
@@ -947,14 +1146,18 @@
           </div>
         </div>
       </section>
+      </div>
+      </div>
 
+      <div class="project-panel" data-panel>
+      <div class="project-panel-inner">
       <section>
         <div class="project-body">
           <div class="desc">
             <h2>Instruction at Studio Two Three</h2>
-            <p>At Studio Two Three, a 501c3 nonprofit community arts space that supports art making for personal & social change, I taught multiple classes. I enjoyed making flyers for upcoming classes that embodied what I was teaching. My hope is to inspire others to try something new and explore the world of analog printing. In Letterpress 101 I covered type nomenclature, composing type, and press operation. The studio's traditional print shop houses several vintage presses donated by museums and private collectors. Letterpress workshops would begin with a guided tour of the studio's extensive century old wood and metal type collection, one that I've personally cleaned and catalogued. These classes typically ran in groups of three to five, though I also taught one-on-one sessions.</p>
-            <p>I also led a more approachable beginner class that offered a low pressure introduction to analog printing using flat LEGO pieces. Students composed their own artworks while I demonstrated the studio's various presses and how to prepare paper and compositions for printing. </p>
-            <p>My Cyanotype instruction explored printing with natural materials, using foraged natural materials, photographic images from film or transparencies, or truly unique items like a glass fish bottle. Workshops would sometimes be indoors depending on weather, if conditions weren't optimal for natural UV sunlight exposure, the studio's indoor exposure unit would save the day. These classes could be up to fifteen students. Cyanotype printing is one of my creative passions and I love to share that. I was drawn to working with natural materials within artistic practice and recently I've experimented with chlorotype printing with a friend and hope to explore it further.</p>
+            <p>I taught multiple classes at Studio Two Three, "a 501c3 nonprofit community arts space that supports art making for personal & social change". My hope is to inspire others to try something new and explore the world of analog printing. In Letterpress 101 I covered type nomenclature, composing type, and press operation. The studio's traditional print shop houses several vintage presses donated by museums and private collectors. Letterpress workshops would begin with a guided tour of the studio's extensive century old wood and metal type collection, one that I've personally cleaned and catalogued. These classes typically ran in groups of three to five, though I also taught one-on-one sessions.</p>
+            <p>Lego Letterpress was a more approachable class that offered a low pressure introduction to analog printing using flat LEGO pieces.</p>
+            <p>My Cyanotype instruction explored printing with natural materials, photographic images from film or transparencies, or truly unique items like a glass fish bottle. Workshops would sometimes be indoors depending on weather, if conditions weren't optimal for natural UV sunlight exposure, the studio's indoor exposure unit would save the day. These classes could be up to fifteen students. I was drawn to working with natural materials within artistic practice and recently I've experimented with chlorotype printing and hope to explore it further.</p>
           </div>
           <div class="carousel">
             <div class="carousel-track">
@@ -980,7 +1183,11 @@
           </div>
         </div>
       </section>
+      </div>
+      </div>
 
+      <div class="project-panel" data-panel>
+      <div class="project-panel-inner">
       <section>
         <div class="project-body">
           <div class="desc">
@@ -1010,43 +1217,54 @@
           </div>
         </div>
       </section>
+      </div>
+      </div>
 
-        <section>
-        <div class="project-body">
+      <div class="project-panel" data-panel>
+      <div class="project-panel-inner">
+      <section>
+        <div class="project-body stacked">
           <div class="desc">
             <h2>Poster & Zine Archive</h2>
             <p>This archive gathered assorted posters and zines made over several years, following personal interests at the time or specific class assignments. Many of these posters were designed to live digitally, the first two videos here are moving posters.  and that intent shaped their style and color choices. Some included moving elements and were built with simple animation in mind. These pieces were created in artistic spaces that valued controlled chaos and creativity over strict polish.</p>
             <p>Working across posters and zines let me experiment freely with layout, type, and color in ways that felt looser than client based work. Some pieces leaned into collage and found imagery, while others were built entirely from original illustration and hand lettering. The collage piece on slide nine is made entirely out of thrifted scrap material from well known source SCRAP RVA. The dates on some of these old magazines were from nearly a hundred years ago. I love to work with existing material and rework pieces. Though I keep skills and lessons I've learned from past projects in mind, I like to start each project anew and try to figure out a different way to express myself creatively.  </p>
-            
           </div>
-          <div class="carousel">
-            <div class="carousel-track">
-              <div class="carousel-slides">
-                <div class="carousel-slide"><video src="https://res.cloudinary.com/vm72268t/video/upload/v1786637273/Asemics.mp4"></video></div>
-                <div class="carousel-slide"><video src="https://res.cloudinary.com/vm72268t/video/upload/v1786639677/Screen_Recording_2026-08-13_at_12.46.03_PM.mp4"></video></div>
-                <div class="carousel-slide"> <img loading="lazy" decoding="async" src="https://i.postimg.cc/28CJ7mHw/poster1.webp" alt="Project title 4"> </div>                
-                <div class="carousel-slide"> <img loading="lazy" decoding="async" src="https://i.postimg.cc/QxSz6PPg/poster2.webp" alt="Project title 4"> </div>                           
-                <div class="carousel-slide"> <img loading="lazy" decoding="async" src="https://i.postimg.cc/NfbnNVV7/poster3.webp" alt="Project title 4"> </div>
-                <div class="carousel-slide"> <img loading="lazy" decoding="async" src="https://i.postimg.cc/28TtHJJx/poster4.webp" alt="Project title 4"> </div> 
-                <div class="carousel-slide"> <img loading="lazy" decoding="async" src="https://i.postimg.cc/ZKjQfggp/poster5.webp" alt="Project title 4"> </div>                
-                <div class="carousel-slide"> <img loading="lazy" decoding="async" src="https://i.postimg.cc/tCDcrffB/poster6.webp" alt="Project title 4"> </div>               
-                <div class="carousel-slide"> <img loading="lazy" decoding="async" src="https://i.postimg.cc/wTFrWPPf/poster7.webp" alt="Project title 4"> </div>  
-                <div class="carousel-slide"> <img loading="lazy" decoding="async" src="https://i.postimg.cc/zXpQdMM6/poster8.webp" alt="Project title 4"> </div>                
-                <div class="carousel-slide"> <img loading="lazy" decoding="async" src="https://i.postimg.cc/J4KFTggg/poster9.webp" alt="Project title 4"> </div>               
-                <div class="carousel-slide"> <img loading="lazy" decoding="async" src="https://i.postimg.cc/xTgZs77w/poster10.webp" alt="Project title 4"> </div>                 
-                <div class="carousel-slide"> <img loading="lazy" decoding="async" src="https://i.postimg.cc/76V1Hvgr/poster11.webp" alt="Project title 4"> </div>               
-
-              </div>
+          <div class="poster-layout">
+            <div class="image-grid">
+              <div class="grid-item"><img loading="lazy" decoding="async" src="https://i.postimg.cc/28CJ7mHw/poster1.webp" alt="Project title 4"></div>
+              <div class="grid-item"><img loading="lazy" decoding="async" src="https://i.postimg.cc/QxSz6PPg/poster2.webp" alt="Project title 4"></div>
+              <div class="grid-item"><img loading="lazy" decoding="async" src="https://i.postimg.cc/NfbnNVV7/poster3.webp" alt="Project title 4"></div>
+              <div class="grid-item"><img loading="lazy" decoding="async" src="https://i.postimg.cc/28TtHJJx/poster4.webp" alt="Project title 4"></div>
+              <div class="grid-item"><img loading="lazy" decoding="async" src="https://i.postimg.cc/ZKjQfggp/poster5.webp" alt="Project title 4"></div>
+              <div class="grid-item"><img loading="lazy" decoding="async" src="https://i.postimg.cc/tCDcrffB/poster6.webp" alt="Project title 4"></div>
+              <div class="grid-item"><img loading="lazy" decoding="async" src="https://i.postimg.cc/wTFrWPPf/poster7.webp" alt="Project title 4"></div>
+              <div class="grid-item"><img loading="lazy" decoding="async" src="https://i.postimg.cc/zXpQdMM6/poster8.webp" alt="Project title 4"></div>
+              <div class="grid-item"><img loading="lazy" decoding="async" src="https://i.postimg.cc/J4KFTggg/poster9.webp" alt="Project title 4"></div>
+              <div class="grid-item"><img loading="lazy" decoding="async" src="https://i.postimg.cc/xTgZs77w/poster10.webp" alt="Project title 4"></div>
+              <div class="grid-item"><img loading="lazy" decoding="async" src="https://i.postimg.cc/76V1Hvgr/poster11.webp" alt="Project title 4"></div>
             </div>
-            <button class="carousel-prev" type="button" aria-label="Previous image">&larr;</button>
-            <button class="carousel-next" type="button" aria-label="Next image">&rarr;</button>
-            <div class="carousel-thumbs"></div>
-            <div class="carousel-counter"></div>
+            <div class="video-pair">
+              <div class="grid-item video-wrap"><video src="https://res.cloudinary.com/vm72268t/video/upload/v1786637273/Asemics.mp4"></video></div>
+              <div class="grid-item video-wrap"><video src="https://res.cloudinary.com/vm72268t/video/upload/v1786639677/Screen_Recording_2026-08-13_at_12.46.03_PM.mp4"></video></div>
+            </div>
           </div>
         </div>
       </section>
+      </div>
+      </div>
 
-
+       <div class="project-panel intro-panel" data-panel>
+      <div class="project-panel-inner">
+      <section>
+        <div class="project-body stacked">
+          <div class="desc">
+            <h2>Last Published Changes: 9.29.2026</h2>
+            <p>Contact me if you have any questions or would like to collaborate!</p>
+          </div>
+        </div>
+      </section>
+      </div>
+      </div>
 
     </div>
 
@@ -1062,6 +1280,7 @@
 
     <div class="decor">
     <p>Contact | 703-403-2901 | Work@kohlio.studio</p>
+    </div>
     </div>
 
     <button id="contact-fab" type="button" aria-label="Open contact form" aria-haspopup="dialog" aria-expanded="false">
@@ -1419,6 +1638,7 @@
         btnBranding.classList.add("active");
         btnIllustration.classList.remove("active");
         thumb.classList.remove("show");
+        queuePanelExitUpdate();
       }
       btnIllustration.addEventListener("click", showIllustration);
       btnBranding.addEventListener("click", showBranding);
@@ -1609,6 +1829,84 @@
         resizeToSlide();
         positionArrows();
         updateStatus();
+      });
+
+      // Sticky header height, kept in sync so the panels below it (see the
+      // scroll-snap setup further down) can each fill exactly the remaining
+      // viewport — the header's own height varies as the intro blurb wraps
+      // at different widths.
+      const topbarEl = document.getElementById("topbar");
+      function updateHeaderHeight() {
+        document.documentElement.style.setProperty("--header-h", topbarEl.offsetHeight + "px");
+      }
+      updateHeaderHeight();
+      window.addEventListener("resize", updateHeaderHeight);
+
+      // One-project-per-screen rotate-out exit effect, desktop only (the
+      // transform/opacity CSS that reads --exit lives in the desktop media
+      // query above, so this is a harmless no-op on mobile regardless).
+      // No scroll-snap here on purpose — the page scrolls completely freely
+      // and --exit tracks scroll position continuously, frame by frame, so
+      // the rotate/fade can be left sitting at any half-finished point
+      // instead of being forced to snap all the way to the next project.
+      const scrollPanels = Array.prototype.slice.call(
+        document.querySelectorAll("#branding .project-panel")
+      );
+      function updatePanelExit() {
+        const headerH = topbarEl.offsetHeight;
+        scrollPanels.forEach(function (panel, i) {
+          const inner = panel.querySelector(".project-panel-inner");
+          if (!inner) return;
+          // Neither the hero (index 0, scrolls away plainly into the first
+          // project) nor the last panel (nothing left to hand off to) gets
+          // the rotate/fade exit.
+          if (i === 0 || i === scrollPanels.length - 1) {
+            inner.style.setProperty("--exit", 0);
+            return;
+          }
+          const rect = panel.getBoundingClientRect();
+          // Scaled off the panel's own height (not the viewport) so a
+          // section with a longer description — a taller panel — gets
+          // proportionally more plain scroll before the rotate/fade
+          // starts, instead of a fixed distance cutting reading short.
+          const panelHeight = panel.offsetHeight;
+          const startOffset = panelHeight * 0.45;
+          const distance = Math.max(panelHeight * 0.35, 1);
+          const progress = Math.min(1, Math.max(0, (headerH - rect.top - startOffset) / distance));
+          inner.style.setProperty("--exit", progress);
+        });
+      }
+      let panelExitTicking = false;
+      function queuePanelExitUpdate() {
+        if (panelExitTicking) return;
+        panelExitTicking = true;
+        requestAnimationFrame(function () {
+          updatePanelExit();
+          panelExitTicking = false;
+        });
+      }
+      window.addEventListener("scroll", queuePanelExitUpdate, { passive: true });
+      window.addEventListener("resize", queuePanelExitUpdate);
+      updatePanelExit();
+
+      // Poster & Zine Archive grid: click-to-lightbox, reusing the same
+      // lightbox used everywhere else on the page.
+      document.querySelectorAll(".image-grid .grid-item, .video-pair .grid-item").forEach(function (item) {
+        const media = item.querySelector("img, video");
+        if (!media) return;
+        if (media.tagName === "VIDEO") {
+          media.muted = true;
+          media.loop = true;
+          media.playsInline = true;
+          media.preload = "metadata";
+        }
+        media.addEventListener("click", function () {
+          openLightbox({
+            src: media.currentSrc || media.getAttribute("src"),
+            type: media.tagName === "VIDEO" ? "video" : "image",
+            alt: media.alt || "",
+          });
+        });
       });
 
       load();
